@@ -1,7 +1,7 @@
 # Nx syllable CLI Implementation Plan
 
 > **For agentic workers:** REQUIRED: Use superpowers:subagent-driven-development (if subagents available) or
-> superpowers:executing-plans to implement this plan. Steps use checkbox (`- [ ]`) syntax for tracking.
+> superpowers:executing-plans to implement this plan. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Build a pnpm-managed Nx TypeScript monorepo with one reusable syllable-analysis library and one CLI that reads
 from a file or stdin and writes CSV or JSON to stdout or a file.
@@ -954,7 +954,7 @@ git commit -m "feat: add CLI argument parsing"
 - Test: `apps/syllables-cli/src/lib/serialize-csv.spec.ts`, `apps/syllables-cli/src/lib/serialize-json.spec.ts`,
   `apps/syllables-cli/src/lib/write-output.spec.ts`
 
-- [ ] **Step 1: Write failing tests for serialization and output sinks**
+- [x] **Step 1: Write failing tests for serialization and output sinks**
 
 Create `apps/syllables-cli/src/lib/serialize-csv.spec.ts`:
 
@@ -1044,7 +1044,7 @@ describe("writeOutput", () => {
 });
 ```
 
-- [ ] **Step 2: Run the CLI tests to verify the serializer layer is missing**
+- [x] **Step 2: Run the CLI tests to verify the serializer layer is missing**
 
 Run:
 
@@ -1054,7 +1054,7 @@ pnpm exec nx test syllables-cli
 
 Expected: FAIL because the serializer/output helpers do not exist yet.
 
-- [ ] **Step 3: Implement deterministic serializers and the output sink helper**
+- [x] **Step 3: Implement deterministic serializers and the output sink helper**
 
 Create `apps/syllables-cli/src/lib/serialize-csv.ts`:
 
@@ -1107,7 +1107,7 @@ export async function writeOutput(input: {
 }
 ```
 
-- [ ] **Step 4: Run the CLI tests again**
+- [x] **Step 4: Run the CLI tests again**
 
 Run:
 
@@ -1117,7 +1117,7 @@ pnpm exec nx test syllables-cli
 
 Expected: PASS for CSV formatting, JSON formatting, and output-sink tests.
 
-- [ ] **Step 5: Commit the formatter layer**
+- [x] **Step 5: Commit the formatter layer**
 
 Run:
 
@@ -1135,7 +1135,7 @@ git commit -m "feat: add CLI output formatters"
 - Modify: `apps/syllables-cli/src/main.ts`
 - Test: `apps/syllables-cli/src/lib/run-cli.spec.ts`, `apps/syllables-cli/src/lib/run-main.spec.ts`
 
-- [ ] **Step 1: Write the failing orchestration tests**
+- [x] **Step 1: Write the failing orchestration tests**
 
 Create `apps/syllables-cli/src/lib/run-cli.spec.ts`:
 
@@ -1292,7 +1292,7 @@ describe("runMain", () => {
 });
 ```
 
-- [ ] **Step 2: Run the CLI tests to verify the orchestration layer is still missing**
+- [x] **Step 2: Run the CLI tests to verify the orchestration layer is still missing**
 
 Run:
 
@@ -1302,7 +1302,7 @@ pnpm exec nx test syllables-cli
 
 Expected: FAIL because `runCli` does not exist yet.
 
-- [ ] **Step 3: Implement the runner and keep `main.ts` thin**
+- [x] **Step 3: Implement the runner and keep `main.ts` thin**
 
 Create `apps/syllables-cli/src/lib/run-cli.ts`:
 
@@ -1441,7 +1441,7 @@ Implementation note: keep `runCli` testable by injecting `readFile`, `writeFile`
 instead of reading global process state inside the helper; keep `runMain` responsible for lazy stdin reads plus
 stderr/exit-code handling.
 
-- [ ] **Step 4: Run the CLI test target after wiring everything together**
+- [x] **Step 4: Run the CLI test target after wiring everything together**
 
 Run:
 
@@ -1451,7 +1451,7 @@ pnpm exec nx test syllables-cli
 
 Expected: PASS for parser, input resolution, serialization, and end-to-end runner behavior.
 
-- [ ] **Step 5: Commit the runnable CLI**
+- [x] **Step 5: Commit the runnable CLI**
 
 Run:
 
@@ -1468,7 +1468,7 @@ git commit -m "feat: wire syllable analysis CLI"
 - Modify: `package.json` (only if a convenient root script is missing)
 - Test: full workspace verification commands
 
-- [ ] **Step 1: Write the usage documentation**
+- [x] **Step 1: Write the usage documentation**
 
 Create `README.md` with:
 
@@ -1498,7 +1498,7 @@ Document the default behavior explicitly:
 - CSV uses semicolons and always quotes the syllable text column
 - `--limit` defaults to `100`
 
-- [ ] **Step 2: Run the complete verification suite**
+- [x] **Step 2: Run the complete verification suite**
 
 Run:
 
@@ -1511,7 +1511,7 @@ pnpm exec nx build syllables-cli
 
 Expected: all tests and both builds pass.
 
-- [ ] **Step 3: Smoke-test the CLI from both supported input modes**
+- [x] **Step 3: Smoke-test the CLI from both supported input modes**
 
 Run:
 
@@ -1543,7 +1543,7 @@ Expected:
 ]
 ```
 
-- [ ] **Step 4: Commit the docs and final polish**
+- [x] **Step 4: Commit the docs and final polish**
 
 Run:
 
