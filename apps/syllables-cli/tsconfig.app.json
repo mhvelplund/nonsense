@@ -6,7 +6,10 @@
     "rootDir": "src",
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo"
   },
-  "include": ["src/**/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "../../libs/syllables-core/src/lib/vendor-module-declarations.d.ts"
+  ],
   "exclude": [
     "vite.config.ts",
     "vite.config.mts",

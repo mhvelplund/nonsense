@@ -1,7 +1,13 @@
 import { runCli, type RunCliDeps } from "./run-cli";
 
 async function readStdin(stream: NodeJS.ReadableStream): Promise<string> {
-  return new Response(stream as unknown as BodyInit).text();
+  const chunks: string[] = [];
+
+  for await (const chunk of stream) {
+    chunks.push(typeof chunk === "string" ? chunk : chunk.toString("utf8"));
+  }
+
+  return chunks.join("");
 }
 
 export async function runMain(
@@ -17,7 +23,7 @@ export async function runMain(
   },
 ) {
   try {
-    const stdinIsTty = input.stdin.isTTY ?? true;
+    const stdinIsTty = input.stdin.isTTY === true;
     const stdinText = stdinIsTty ? "" : await readStdin(input.stdin);
 
     await (input.runCliImpl ?? runCli)(argv, {

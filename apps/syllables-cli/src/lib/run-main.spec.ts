@@ -85,4 +85,27 @@ describe("runMain", () => {
       writeFile: undefined,
     });
   });
+
+  it("treats undefined isTTY as piped stdin when data is available", async () => {
+    const stdin = Readable.from(["syllable"]) as NodeJS.ReadableStream & {
+      isTTY?: boolean;
+    };
+    const runCliImpl = vi.fn();
+
+    await runMain([], {
+      stdin,
+      stdout: { write: vi.fn() },
+      stderr: { write: vi.fn() },
+      runCliImpl,
+      setExitCode: vi.fn(),
+    });
+
+    expect(runCliImpl).toHaveBeenCalledWith([], {
+      stdinIsTty: false,
+      stdinText: "syllable",
+      stdout: expect.any(Object),
+      readFile: undefined,
+      writeFile: undefined,
+    });
+  });
 });
