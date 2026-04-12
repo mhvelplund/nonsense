@@ -11,8 +11,8 @@ export function rankSyllableCounts(
 ): RankedSyllableEntry[] {
   const limit = options.limit ?? 100;
 
-  if (limit < 1) {
-    throw new Error("Result limit must be at least 1.");
+  if (!Number.isInteger(limit) || limit < 1) {
+    throw new Error("Result limit must be a positive integer.");
   }
 
   const entries = Object.entries(counts).map(([syllable, count]) => ({

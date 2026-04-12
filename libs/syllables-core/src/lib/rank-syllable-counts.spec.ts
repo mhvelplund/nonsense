@@ -39,9 +39,11 @@ describe("rankSyllableCounts", () => {
   });
 
   it("rejects invalid limits", () => {
-    expect(() => rankSyllableCounts({ aa: 1 }, { limit: 0, sort: [] })).toThrow(
-      /limit must be at least 1/i,
-    );
+    for (const limit of [0, 1.5, Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(() => rankSyllableCounts({ aa: 1 }, { limit, sort: [] })).toThrow(
+        /positive integer/i,
+      );
+    }
   });
 
   it("supports multi-key sorting with mixed directions", () => {
