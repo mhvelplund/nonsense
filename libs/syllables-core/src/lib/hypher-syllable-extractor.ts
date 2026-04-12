@@ -1,8 +1,13 @@
-import Hypher from "hypher";
-import english from "hyphenation.en-us";
+type HypherEngine = {
+  hyphenate(word: string): string[];
+};
 
 export function createHypherSyllableExtractor(
-  createEngine: () => Pick<Hypher, "hyphenate"> = () => new Hypher(english),
+  createEngine: () => HypherEngine = () => {
+    const Hypher = require("hypher") as new (patterns: unknown) => HypherEngine;
+    const english: unknown = require("hyphenation.en-us");
+    return new Hypher(english);
+  },
 ) {
   const engine = createEngine();
   return (word: string): string[] => engine.hyphenate(word);
