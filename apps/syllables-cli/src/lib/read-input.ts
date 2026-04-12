@@ -1,7 +1,13 @@
+import { parseCliArgs } from "./parse-cli-args";
+
+export type InputRequest =
+  | { source: "file"; path: string }
+  | { source: "stdin" };
+
 export function resolveInputRequest(input: {
   inputPath?: string;
   stdinIsTty: boolean;
-}): { source: "file"; path: string } | { source: "stdin" } {
+}): InputRequest {
   if (input.inputPath && !input.stdinIsTty) {
     throw new Error("Use either a file path or stdin, not both.");
   }
@@ -15,4 +21,13 @@ export function resolveInputRequest(input: {
   }
 
   throw new Error("Provide a file path or pipe input on stdin.");
+}
+
+export function resolveCliInputRequest(
+  argv: string[],
+  stdinIsTty: boolean,
+): InputRequest {
+  const { inputPath } = parseCliArgs(argv);
+
+  return resolveInputRequest({ inputPath, stdinIsTty });
 }

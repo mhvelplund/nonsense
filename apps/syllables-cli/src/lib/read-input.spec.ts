@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { resolveInputRequest } from "./read-input";
+import { resolveCliInputRequest, resolveInputRequest } from "./read-input";
 
 describe("resolveInputRequest", () => {
   it("chooses a file path when provided and stdin is a tty", () => {
@@ -27,6 +27,29 @@ describe("resolveInputRequest", () => {
   it("rejects a file path combined with piped stdin", () => {
     expect(() =>
       resolveInputRequest({ inputPath: "input.txt", stdinIsTty: false }),
+    ).toThrow("Use either a file path or stdin, not both.");
+  });
+});
+
+describe("resolveCliInputRequest", () => {
+  it("resolves a parsed file input path at the cli boundary", () => {
+    expect(
+      resolveCliInputRequest(["--format", "json", "input.txt"], true),
+    ).toEqual({
+      source: "file",
+      path: "input.txt",
+    });
+  });
+
+  it("resolves stdin when argv stays file-free and stdin is piped", () => {
+    expect(resolveCliInputRequest(["--limit", "25"], false)).toEqual({
+      source: "stdin",
+    });
+  });
+
+  it("rejects mixed file argv and piped stdin at the cli boundary", () => {
+    expect(() =>
+      resolveCliInputRequest(["--sort", "count:desc", "input.txt"], false),
     ).toThrow("Use either a file path or stdin, not both.");
   });
 });
