@@ -13,8 +13,6 @@ terminal-facing errors.
 
 **Tech Stack:** Nx, pnpm, TypeScript, Node.js, `@nx/node`, Vitest, `hypher`, `hyphenation.en-us`
 
-
-
 ## Planned file structure
 
 ### Root workspace files
@@ -58,13 +56,14 @@ terminal-facing errors.
 ### Task 1: Bootstrap the Nx workspace in the existing repository
 
 **Files:**
+
 - Create: `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `nx.json`, `tsconfig.base.json`
 - Modify: `package.json`, `.gitignore`
 - Create via generators: `apps/syllables-cli/project.json`, `apps/syllables-cli/src/main.ts`,
   `libs/syllables-core/project.json`, `libs/syllables-core/src/index.ts`
 - Test: generated Vitest targets for `syllables-cli` and `syllables-core`
 
-- [ ] **Step 1: Install pnpm if it is missing and initialize git**
+- [x] **Step 1: Install pnpm if it is missing and initialize git**
 
 Run:
 
@@ -75,7 +74,7 @@ test -d .git || git init
 
 Expected: `pnpm` is available in `PATH` and `.git/` exists.
 
-- [ ] **Step 2: Create a non-interactive package manifest and install the workspace toolchain**
+- [x] **Step 2: Create a non-interactive package manifest and install the workspace toolchain**
 
 Run:
 
@@ -87,7 +86,7 @@ test -f pnpm-workspace.yaml || printf 'packages:\n  - apps/*\n  - libs/*\n' > pn
 
 Expected: `package.json` exists, the root workspace dependencies are installed, and `pnpm-workspace.yaml` exists.
 
-- [ ] **Step 3: Initialize Nx in the existing repository**
+- [x] **Step 3: Initialize Nx in the existing repository**
 
 Run:
 
@@ -100,7 +99,7 @@ Expected: Nx creates root workspace config such as `nx.json` and `tsconfig.base.
 Generator note: keep the generated Nx/Vitest project config files and repurpose the generated source entry files in
 later tasks; only replace placeholder sample logic, not the project wiring.
 
-- [ ] **Step 4: Generate the CLI app and reusable library**
+- [x] **Step 4: Generate the CLI app and reusable library**
 
 Run:
 
@@ -113,7 +112,7 @@ rm -f libs/syllables-core/src/lib/syllables-core.ts libs/syllables-core/src/lib/
 Expected: Nx reports generated projects named `syllables-cli` and `syllables-core`, and the placeholder library
 implementation/spec files are removed so later tasks own the library file structure cleanly.
 
-- [ ] **Step 5: Install the runtime syllable dependencies**
+- [x] **Step 5: Install the runtime syllable dependencies**
 
 Run:
 
@@ -124,7 +123,7 @@ pnpm add hypher hyphenation.en-us
 Expected: the workspace has root config files plus generated app/library directories, and `hypher` dependencies are
 present in `package.json`.
 
-- [ ] **Step 6: Verify the generated workspace before custom code**
+- [x] **Step 6: Verify the generated workspace before custom code**
 
 Run:
 
@@ -139,7 +138,7 @@ pnpm exec nx build syllables-cli
 Expected: `nx show projects` lists `syllables-cli` and `syllables-core`; both generated test targets and both generated
 build targets pass.
 
-- [ ] **Step 7: Commit the clean scaffold**
+- [x] **Step 7: Commit the clean scaffold**
 
 Run:
 
@@ -153,30 +152,33 @@ Expected: one scaffold commit with no application logic yet.
 ### Task 2: Define the unsorted core-analysis contract
 
 **Files:**
+
 - Create: `libs/syllables-core/src/lib/types.ts`, `libs/syllables-core/src/lib/analyze-syllable-counts.ts`,
   `libs/syllables-core/src/lib/analyze-syllable-counts.spec.ts`
 - Modify: `libs/syllables-core/src/index.ts`
 - Test: `libs/syllables-core/src/lib/analyze-syllable-counts.spec.ts`
 
-- [ ] **Step 1: Write the failing contract test for unsorted aggregation**
+- [x] **Step 1: Write the failing contract test for unsorted aggregation**
 
 Create `libs/syllables-core/src/lib/analyze-syllable-counts.spec.ts`:
 
 ```ts
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from "vitest";
 
-import { analyzeSyllableCounts } from './analyze-syllable-counts';
-import type { SyllableExtractor } from './types';
+import { analyzeSyllableCounts } from "./analyze-syllable-counts";
+import type { SyllableExtractor } from "./types";
 
 const extractor: SyllableExtractor = (word) => {
-  if (word === 'syllable') return ['syl', 'la', 'ble'];
-  if (word === 'common') return ['com', 'mon'];
+  if (word === "syllable") return ["syl", "la", "ble"];
+  if (word === "common") return ["com", "mon"];
   return [];
 };
 
-describe('analyzeSyllableCounts', () => {
-  it('returns an unsorted syllable-count record', () => {
-    expect(analyzeSyllableCounts('Syllable common syllable', extractor)).toEqual({
+describe("analyzeSyllableCounts", () => {
+  it("returns an unsorted syllable-count record", () => {
+    expect(
+      analyzeSyllableCounts("Syllable common syllable", extractor),
+    ).toEqual({
       syl: 2,
       la: 2,
       ble: 2,
@@ -185,23 +187,23 @@ describe('analyzeSyllableCounts', () => {
     });
   });
 
-  it('returns an empty record for empty input', () => {
-    expect(analyzeSyllableCounts('', extractor)).toEqual({});
+  it("returns an empty record for empty input", () => {
+    expect(analyzeSyllableCounts("", extractor)).toEqual({});
   });
 
-  it('rethrows extractor failures instead of swallowing them', () => {
+  it("rethrows extractor failures instead of swallowing them", () => {
     const failingExtractor: SyllableExtractor = () => {
-      throw new Error('extractor failed');
+      throw new Error("extractor failed");
     };
 
-    expect(() => analyzeSyllableCounts('syllable', failingExtractor)).toThrow(
-      'extractor failed'
+    expect(() => analyzeSyllableCounts("syllable", failingExtractor)).toThrow(
+      "extractor failed",
     );
   });
 });
 ```
 
-- [ ] **Step 2: Run the test to verify the contract is missing**
+- [x] **Step 2: Run the test to verify the contract is missing**
 
 Run:
 
@@ -211,7 +213,7 @@ pnpm exec nx test syllables-core
 
 Expected: FAIL because `analyzeSyllableCounts` and `SyllableExtractor` do not exist yet.
 
-- [ ] **Step 3: Write the minimal core contract and implementation**
+- [x] **Step 3: Write the minimal core contract and implementation**
 
 Create `libs/syllables-core/src/lib/types.ts`:
 
@@ -224,11 +226,11 @@ export type SyllableExtractor = (word: string) => string[];
 Create `libs/syllables-core/src/lib/analyze-syllable-counts.ts`:
 
 ```ts
-import type { SyllableCounts, SyllableExtractor } from './types';
+import type { SyllableCounts, SyllableExtractor } from "./types";
 
 export function analyzeSyllableCounts(
   text: string,
-  extractSyllables: SyllableExtractor = () => []
+  extractSyllables: SyllableExtractor = () => [],
 ): SyllableCounts {
   const words = text.toLowerCase().match(/[a-z]+/g) ?? [];
   return words.reduce<SyllableCounts>((counts, word) => {
@@ -243,11 +245,11 @@ export function analyzeSyllableCounts(
 Update `libs/syllables-core/src/index.ts`:
 
 ```ts
-export * from './lib/analyze-syllable-counts';
-export * from './lib/types';
+export * from "./lib/analyze-syllable-counts";
+export * from "./lib/types";
 ```
 
-- [ ] **Step 4: Run the test to verify the new contract passes**
+- [x] **Step 4: Run the test to verify the new contract passes**
 
 Run:
 
@@ -257,7 +259,7 @@ pnpm exec nx test syllables-core
 
 Expected: PASS for the new aggregation test.
 
-- [ ] **Step 5: Commit the contract**
+- [x] **Step 5: Commit the contract**
 
 Run:
 
@@ -269,6 +271,7 @@ git commit -m "feat: add unsorted syllable aggregation contract"
 ### Task 3: Add normalization and the external syllable extractor
 
 **Files:**
+
 - Create: `libs/syllables-core/src/lib/tokenize-words.ts`, `libs/syllables-core/src/lib/tokenize-words.spec.ts`,
   `libs/syllables-core/src/lib/hypher-syllable-extractor.ts`,
   `libs/syllables-core/src/lib/hypher-syllable-extractor.spec.ts`
@@ -278,18 +281,21 @@ git commit -m "feat: add unsorted syllable aggregation contract"
   `libs/syllables-core/src/lib/hypher-syllable-extractor.spec.ts`,
   `libs/syllables-core/src/lib/analyze-syllable-counts.spec.ts`
 
-- [ ] **Step 1: Write the failing tests for normalization and the `hypher` adapter**
+- [x] **Step 1: Write the failing tests for normalization and the `hypher` adapter**
 
 Create `libs/syllables-core/src/lib/tokenize-words.spec.ts`:
 
 ```ts
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from "vitest";
 
-import { tokenizeWords } from './tokenize-words';
+import { tokenizeWords } from "./tokenize-words";
 
-describe('tokenizeWords', () => {
-  it('lowercases text and keeps alphabetic words only', () => {
-    expect(tokenizeWords('Syllable, common 42!')).toEqual(['syllable', 'common']);
+describe("tokenizeWords", () => {
+  it("lowercases text and keeps alphabetic words only", () => {
+    expect(tokenizeWords("Syllable, common 42!")).toEqual([
+      "syllable",
+      "common",
+    ]);
   });
 });
 ```
@@ -297,34 +303,34 @@ describe('tokenizeWords', () => {
 Create `libs/syllables-core/src/lib/hypher-syllable-extractor.spec.ts`:
 
 ```ts
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from "vitest";
 
-import { createHypherSyllableExtractor } from './hypher-syllable-extractor';
+import { createHypherSyllableExtractor } from "./hypher-syllable-extractor";
 
-describe('createHypherSyllableExtractor', () => {
-  it('splits words using the English hyphenation patterns', () => {
+describe("createHypherSyllableExtractor", () => {
+  it("splits words using the English hyphenation patterns", () => {
     const extract = createHypherSyllableExtractor();
 
-    expect(extract('syllable')).toEqual(['syl', 'la', 'ble']);
-    expect(extract('common')).toEqual(['com', 'mon']);
+    expect(extract("syllable")).toEqual(["syl", "la", "ble"]);
+    expect(extract("common")).toEqual(["com", "mon"]);
   });
 
-  it('rethrows dependency initialization failures', () => {
+  it("rethrows dependency initialization failures", () => {
     expect(() =>
       createHypherSyllableExtractor(() => {
-        throw new Error('hypher init failed');
-      })
-    ).toThrow('hypher init failed');
+        throw new Error("hypher init failed");
+      }),
+    ).toThrow("hypher init failed");
   });
 
-  it('rethrows dependency failures so callers can surface them', () => {
+  it("rethrows dependency failures so callers can surface them", () => {
     const extract = createHypherSyllableExtractor(() => ({
       hyphenate() {
-        throw new Error('hypher failed');
+        throw new Error("hypher failed");
       },
     }));
 
-    expect(() => extract('syllable')).toThrow('hypher failed');
+    expect(() => extract("syllable")).toThrow("hypher failed");
   });
 });
 ```
@@ -332,17 +338,17 @@ describe('createHypherSyllableExtractor', () => {
 Update `libs/syllables-core/src/lib/analyze-syllable-counts.spec.ts` with:
 
 ```ts
-it('returns an empty record when no words produce syllables', () => {
-  expect(analyzeSyllableCounts('mystery tokens', () => [])).toEqual({});
+it("returns an empty record when no words produce syllables", () => {
+  expect(analyzeSyllableCounts("mystery tokens", () => [])).toEqual({});
 });
 
-it('ignores words whose extractor returns no syllables', () => {
+it("ignores words whose extractor returns no syllables", () => {
   const sparseExtractor: SyllableExtractor = (word) => {
-    if (word === 'syllable') return ['syl', 'la', 'ble'];
+    if (word === "syllable") return ["syl", "la", "ble"];
     return [];
   };
 
-  expect(analyzeSyllableCounts('syllable mystery', sparseExtractor)).toEqual({
+  expect(analyzeSyllableCounts("syllable mystery", sparseExtractor)).toEqual({
     syl: 1,
     la: 1,
     ble: 1,
@@ -350,7 +356,7 @@ it('ignores words whose extractor returns no syllables', () => {
 });
 ```
 
-- [ ] **Step 2: Run the tests to verify both helpers are still missing**
+- [x] **Step 2: Run the tests to verify both helpers are still missing**
 
 Run:
 
@@ -360,7 +366,7 @@ pnpm exec nx test syllables-core
 
 Expected: FAIL because `tokenizeWords` and `createHypherSyllableExtractor` are not implemented yet.
 
-- [ ] **Step 3: Implement focused helpers and export them**
+- [x] **Step 3: Implement focused helpers and export them**
 
 Create `libs/syllables-core/src/lib/tokenize-words.ts`:
 
@@ -373,11 +379,11 @@ export function tokenizeWords(text: string): string[] {
 Create `libs/syllables-core/src/lib/hypher-syllable-extractor.ts`:
 
 ```ts
-import Hypher from 'hypher';
-import english from 'hyphenation.en-us';
+import Hypher from "hypher";
+import english from "hyphenation.en-us";
 
 export function createHypherSyllableExtractor(
-  createEngine: () => Pick<Hypher, 'hyphenate'> = () => new Hypher(english)
+  createEngine: () => Pick<Hypher, "hyphenate"> = () => new Hypher(english),
 ) {
   const engine = createEngine();
   return (word: string): string[] => engine.hyphenate(word);
@@ -387,13 +393,13 @@ export function createHypherSyllableExtractor(
 Update `libs/syllables-core/src/lib/analyze-syllable-counts.ts`:
 
 ```ts
-import { createHypherSyllableExtractor } from './hypher-syllable-extractor';
-import type { SyllableCounts, SyllableExtractor } from './types';
-import { tokenizeWords } from './tokenize-words';
+import { createHypherSyllableExtractor } from "./hypher-syllable-extractor";
+import type { SyllableCounts, SyllableExtractor } from "./types";
+import { tokenizeWords } from "./tokenize-words";
 
 export function analyzeSyllableCounts(
   text: string,
-  extractSyllables: SyllableExtractor = createHypherSyllableExtractor()
+  extractSyllables: SyllableExtractor = createHypherSyllableExtractor(),
 ): SyllableCounts {
   const words = tokenizeWords(text);
   return words.reduce<SyllableCounts>((counts, word) => {
@@ -410,13 +416,13 @@ Do not catch adapter failures in `analyzeSyllableCounts`; let them propagate so 
 Update `libs/syllables-core/src/index.ts`:
 
 ```ts
-export * from './lib/analyze-syllable-counts';
-export * from './lib/hypher-syllable-extractor';
-export * from './lib/tokenize-words';
-export * from './lib/types';
+export * from "./lib/analyze-syllable-counts";
+export * from "./lib/hypher-syllable-extractor";
+export * from "./lib/tokenize-words";
+export * from "./lib/types";
 ```
 
-- [ ] **Step 4: Run the tests to verify normalization and extraction**
+- [x] **Step 4: Run the tests to verify normalization and extraction**
 
 Run:
 
@@ -426,7 +432,7 @@ pnpm exec nx test syllables-core
 
 Expected: PASS for tokenization, adapter, and the existing aggregation test.
 
-- [ ] **Step 5: Commit the extraction layer**
+- [x] **Step 5: Commit the extraction layer**
 
 Run:
 
@@ -438,6 +444,7 @@ git commit -m "feat: add syllable tokenization and hypher adapter"
 ### Task 4: Add ranking, configurable limits, and record projection
 
 **Files:**
+
 - Create: `libs/syllables-core/src/lib/rank-syllable-counts.ts`,
   `libs/syllables-core/src/lib/rank-syllable-counts.spec.ts`, `libs/syllables-core/src/lib/to-syllable-record.ts`,
   `libs/syllables-core/src/lib/to-syllable-record.spec.ts`
@@ -445,73 +452,73 @@ git commit -m "feat: add syllable tokenization and hypher adapter"
 - Test: `libs/syllables-core/src/lib/rank-syllable-counts.spec.ts`,
   `libs/syllables-core/src/lib/to-syllable-record.spec.ts`
 
-- [ ] **Step 1: Write failing tests for ranking, top-N selection, and record projection**
+- [x] **Step 1: Write failing tests for ranking, top-N selection, and record projection**
 
 Create `libs/syllables-core/src/lib/rank-syllable-counts.spec.ts`:
 
 ```ts
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from "vitest";
 
-import { rankSyllableCounts } from './rank-syllable-counts';
+import { rankSyllableCounts } from "./rank-syllable-counts";
 
-describe('rankSyllableCounts', () => {
-  it('selects membership by count desc then syllable asc before applying output sort', () => {
+describe("rankSyllableCounts", () => {
+  it("selects membership by count desc then syllable asc before applying output sort", () => {
     const ranked = rankSyllableCounts(
       { zz: 5, aa: 5, mm: 4 },
       {
         limit: 2,
-        sort: [{ field: 'syllable', direction: 'asc' }],
-      }
+        sort: [{ field: "syllable", direction: "asc" }],
+      },
     );
 
     expect(ranked).toEqual([
-      { syllable: 'aa', count: 5 },
-      { syllable: 'zz', count: 5 },
+      { syllable: "aa", count: 5 },
+      { syllable: "zz", count: 5 },
     ]);
   });
 
-  it('uses the canonical default order when no sort options are supplied', () => {
+  it("uses the canonical default order when no sort options are supplied", () => {
     expect(rankSyllableCounts({ zz: 2, aa: 2, mm: 1 }, { sort: [] })).toEqual([
-      { syllable: 'aa', count: 2 },
-      { syllable: 'zz', count: 2 },
-      { syllable: 'mm', count: 1 },
+      { syllable: "aa", count: 2 },
+      { syllable: "zz", count: 2 },
+      { syllable: "mm", count: 1 },
     ]);
   });
 
-  it('returns an empty list for empty counts', () => {
+  it("returns an empty list for empty counts", () => {
     expect(rankSyllableCounts({}, { sort: [] })).toEqual([]);
   });
 
-  it('defaults the limit to 100 when omitted', () => {
+  it("defaults the limit to 100 when omitted", () => {
     const counts = Object.fromEntries(
-      Array.from({ length: 101 }, (_, index) => [`s${index}`, 101 - index])
+      Array.from({ length: 101 }, (_, index) => [`s${index}`, 101 - index]),
     );
 
     expect(rankSyllableCounts(counts, { sort: [] })).toHaveLength(100);
   });
 
-  it('rejects invalid limits', () => {
+  it("rejects invalid limits", () => {
     expect(() => rankSyllableCounts({ aa: 1 }, { limit: 0, sort: [] })).toThrow(
-      /limit must be at least 1/i
+      /limit must be at least 1/i,
     );
   });
 
-  it('supports multi-key sorting with mixed directions', () => {
+  it("supports multi-key sorting with mixed directions", () => {
     const ranked = rankSyllableCounts(
       { aa: 2, zz: 2, mm: 1 },
       {
         limit: 3,
         sort: [
-          { field: 'count', direction: 'asc' },
-          { field: 'syllable', direction: 'desc' },
+          { field: "count", direction: "asc" },
+          { field: "syllable", direction: "desc" },
         ],
-      }
+      },
     );
 
     expect(ranked).toEqual([
-      { syllable: 'mm', count: 1 },
-      { syllable: 'zz', count: 2 },
-      { syllable: 'aa', count: 2 },
+      { syllable: "mm", count: 1 },
+      { syllable: "zz", count: 2 },
+      { syllable: "aa", count: 2 },
     ]);
   });
 });
@@ -520,30 +527,30 @@ describe('rankSyllableCounts', () => {
 Create `libs/syllables-core/src/lib/to-syllable-record.spec.ts`:
 
 ```ts
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from "vitest";
 
-import { toSyllableRecord } from './to-syllable-record';
+import { toSyllableRecord } from "./to-syllable-record";
 
-describe('toSyllableRecord', () => {
-  it('projects ranked entries back into a record', () => {
+describe("toSyllableRecord", () => {
+  it("projects ranked entries back into a record", () => {
     expect(
       toSyllableRecord([
-        { syllable: 'la', count: 2 },
-        { syllable: 'ble', count: 2 },
-      ])
+        { syllable: "la", count: 2 },
+        { syllable: "ble", count: 2 },
+      ]),
     ).toEqual({
       la: 2,
       ble: 2,
     });
   });
 
-  it('returns an empty record for empty ranked results', () => {
+  it("returns an empty record for empty ranked results", () => {
     expect(toSyllableRecord([])).toEqual({});
   });
 });
 ```
 
-- [ ] **Step 2: Run the tests to verify the ranking API does not exist yet**
+- [x] **Step 2: Run the tests to verify the ranking API does not exist yet**
 
 Run:
 
@@ -553,7 +560,7 @@ pnpm exec nx test syllables-core
 
 Expected: FAIL because ranking types/helpers are still missing.
 
-- [ ] **Step 3: Implement the ranking wrapper and projection helper**
+- [x] **Step 3: Implement the ranking wrapper and projection helper**
 
 Update `libs/syllables-core/src/lib/types.ts`:
 
@@ -562,8 +569,8 @@ export type SyllableCounts = Record<string, number>;
 
 export type SyllableExtractor = (word: string) => string[];
 
-export type SortField = 'count' | 'syllable';
-export type SortDirection = 'asc' | 'desc';
+export type SortField = "count" | "syllable";
+export type SortDirection = "asc" | "desc";
 
 export interface SortSpec {
   field: SortField;
@@ -579,23 +586,28 @@ export interface RankedSyllableEntry {
 Create `libs/syllables-core/src/lib/rank-syllable-counts.ts`:
 
 ```ts
-import type { RankedSyllableEntry, SortSpec, SyllableCounts } from './types';
+import type { RankedSyllableEntry, SortSpec, SyllableCounts } from "./types";
 
 const CANONICAL_SORT: SortSpec[] = [
-  { field: 'count', direction: 'desc' },
-  { field: 'syllable', direction: 'asc' },
+  { field: "count", direction: "desc" },
+  { field: "syllable", direction: "asc" },
 ];
 
 export function rankSyllableCounts(
   counts: SyllableCounts,
-  options: { limit?: number; sort: SortSpec[] }
+  options: { limit?: number; sort: SortSpec[] },
 ): RankedSyllableEntry[] {
   const limit = options.limit ?? 100;
   if (limit < 1) {
-    throw new Error('Result limit must be at least 1.');
+    throw new Error("Result limit must be at least 1.");
   }
-  const entries = Object.entries(counts).map(([syllable, count]) => ({ syllable, count }));
-  const selected = [...entries].sort(buildComparator(CANONICAL_SORT)).slice(0, limit);
+  const entries = Object.entries(counts).map(([syllable, count]) => ({
+    syllable,
+    count,
+  }));
+  const selected = [...entries]
+    .sort(buildComparator(CANONICAL_SORT))
+    .slice(0, limit);
   const outputSort = options.sort.length > 0 ? options.sort : CANONICAL_SORT;
   return selected.sort(buildComparator(outputSort));
 }
@@ -603,9 +615,9 @@ export function rankSyllableCounts(
 function buildComparator(sort: SortSpec[]) {
   return (left: RankedSyllableEntry, right: RankedSyllableEntry): number => {
     for (const rule of sort) {
-      const factor = rule.direction === 'asc' ? 1 : -1;
+      const factor = rule.direction === "asc" ? 1 : -1;
       const comparison =
-        rule.field === 'count'
+        rule.field === "count"
           ? left.count - right.count
           : left.syllable.localeCompare(right.syllable);
       if (comparison !== 0) {
@@ -620,28 +632,32 @@ function buildComparator(sort: SortSpec[]) {
 Create `libs/syllables-core/src/lib/to-syllable-record.ts`:
 
 ```ts
-import type { RankedSyllableEntry, SyllableCounts } from './types';
+import type { RankedSyllableEntry, SyllableCounts } from "./types";
 
-export function toSyllableRecord(entries: RankedSyllableEntry[]): SyllableCounts {
-  return Object.fromEntries(entries.map(({ syllable, count }) => [syllable, count]));
+export function toSyllableRecord(
+  entries: RankedSyllableEntry[],
+): SyllableCounts {
+  return Object.fromEntries(
+    entries.map(({ syllable, count }) => [syllable, count]),
+  );
 }
 ```
 
 Update `libs/syllables-core/src/index.ts`:
 
 ```ts
-export * from './lib/analyze-syllable-counts';
-export * from './lib/hypher-syllable-extractor';
-export * from './lib/rank-syllable-counts';
-export * from './lib/tokenize-words';
-export * from './lib/to-syllable-record';
-export * from './lib/types';
+export * from "./lib/analyze-syllable-counts";
+export * from "./lib/hypher-syllable-extractor";
+export * from "./lib/rank-syllable-counts";
+export * from "./lib/tokenize-words";
+export * from "./lib/to-syllable-record";
+export * from "./lib/types";
 ```
 
 Implementation note: keep the comparator logic private inside `rank-syllable-counts.ts`; do not add a separate public
 utility unless a second caller appears.
 
-- [ ] **Step 4: Run the core-library tests again**
+- [x] **Step 4: Run the core-library tests again**
 
 Run:
 
@@ -653,7 +669,7 @@ pnpm exec nx build syllables-core
 Expected: PASS for aggregation, tokenization, extraction, ranking, record-projection tests, and the `syllables-core`
 build target.
 
-- [ ] **Step 5: Commit the finished core API**
+- [x] **Step 5: Commit the finished core API**
 
 Run:
 
@@ -667,75 +683,95 @@ git commit -m "feat: add ranking and projection helpers"
 ### Task 5: Parse CLI options and validate input-source rules
 
 **Files:**
+
 - Create: `apps/syllables-cli/src/lib/parse-cli-args.ts`, `apps/syllables-cli/src/lib/parse-cli-args.spec.ts`,
   `apps/syllables-cli/src/lib/read-input.ts`, `apps/syllables-cli/src/lib/read-input.spec.ts`
 - Test: `apps/syllables-cli/src/lib/parse-cli-args.spec.ts`, `apps/syllables-cli/src/lib/read-input.spec.ts`
 
-- [ ] **Step 1: Write failing tests for option defaults and input validation**
+- [x] **Step 1: Write failing tests for option defaults and input validation**
 
 Create `apps/syllables-cli/src/lib/parse-cli-args.spec.ts`:
 
 ```ts
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from "vitest";
 
-import { parseCliArgs } from './parse-cli-args';
+import { parseCliArgs } from "./parse-cli-args";
 
-describe('parseCliArgs', () => {
-  it('defaults to csv output, no header, and limit 100', () => {
-    expect(parseCliArgs(['input.txt'])).toMatchObject({
-      inputPath: 'input.txt',
-      format: 'csv',
+describe("parseCliArgs", () => {
+  it("defaults to csv output, no header, and limit 100", () => {
+    expect(parseCliArgs(["input.txt"])).toMatchObject({
+      inputPath: "input.txt",
+      format: "csv",
       header: false,
       limit: 100,
       sort: [],
     });
   });
 
-  it('parses explicit format, header, and output flags', () => {
+  it("parses explicit format, header, and output flags", () => {
     expect(
-      parseCliArgs(['input.txt', '--format', 'json', '--header', '--output', 'result.json'])
+      parseCliArgs([
+        "input.txt",
+        "--format",
+        "json",
+        "--header",
+        "--output",
+        "result.json",
+      ]),
     ).toMatchObject({
-      format: 'json',
+      format: "json",
       header: true,
-      outputPath: 'result.json',
+      outputPath: "result.json",
     });
   });
 
-  it('parses repeated sort flags and explicit limits', () => {
+  it("parses repeated sort flags and explicit limits", () => {
     expect(
       parseCliArgs([
-        'input.txt',
-        '--limit',
-        '250',
-        '--sort',
-        'count:desc',
-        '--sort',
-        'syllable:asc',
-      ])
+        "input.txt",
+        "--limit",
+        "250",
+        "--sort",
+        "count:desc",
+        "--sort",
+        "syllable:asc",
+      ]),
     ).toMatchObject({
       limit: 250,
       sort: [
-        { field: 'count', direction: 'desc' },
-        { field: 'syllable', direction: 'asc' },
+        { field: "count", direction: "desc" },
+        { field: "syllable", direction: "asc" },
       ],
     });
   });
 
-  it('rejects multiple positional files, invalid sort values, and unknown flags', () => {
-    expect(() => parseCliArgs(['one.txt', 'two.txt'])).toThrow(/single input file/i);
-    expect(() => parseCliArgs(['input.txt', '--format', 'xml'])).toThrow(/invalid format/i);
-    expect(() => parseCliArgs(['input.txt', '--limit', '0'])).toThrow(/limit/i);
-    expect(() => parseCliArgs(['input.txt', '--sort', 'unknown:asc'])).toThrow(
-      /invalid sort field/i
+  it("rejects multiple positional files, invalid sort values, and unknown flags", () => {
+    expect(() => parseCliArgs(["one.txt", "two.txt"])).toThrow(
+      /single input file/i,
     );
-    expect(() => parseCliArgs(['input.txt', '--sort', 'count:sideways'])).toThrow(
-      /invalid sort direction/i
+    expect(() => parseCliArgs(["input.txt", "--format", "xml"])).toThrow(
+      /invalid format/i,
     );
-    expect(() => parseCliArgs(['input.txt', '--format'])).toThrow(/requires a value/i);
-    expect(() => parseCliArgs(['input.txt', '--output'])).toThrow(/requires a value/i);
-    expect(() => parseCliArgs(['input.txt', '--sort'])).toThrow(/requires a value/i);
-    expect(() => parseCliArgs(['input.txt', '--limit'])).toThrow(/requires a value/i);
-    expect(() => parseCliArgs(['input.txt', '--wat'])).toThrow(/unknown flag/i);
+    expect(() => parseCliArgs(["input.txt", "--limit", "0"])).toThrow(/limit/i);
+    expect(() => parseCliArgs(["input.txt", "--sort", "unknown:asc"])).toThrow(
+      /invalid sort field/i,
+    );
+    expect(() =>
+      parseCliArgs(["input.txt", "--sort", "count:sideways"]),
+    ).toThrow(/invalid sort direction/i);
+    expect(() => parseCliArgs(["input.txt", "--format"])).toThrow(
+      /requires a value/i,
+    );
+    expect(() => parseCliArgs(["input.txt", "--output"])).toThrow(
+      /requires a value/i,
+    );
+    expect(() => parseCliArgs(["input.txt", "--sort"])).toThrow(
+      /requires a value/i,
+    );
+    expect(() => parseCliArgs(["input.txt", "--limit"])).toThrow(
+      /requires a value/i,
+    );
+    expect(() => parseCliArgs(["input.txt", "--wat"])).toThrow(/unknown flag/i);
   });
 });
 ```
@@ -743,41 +779,41 @@ describe('parseCliArgs', () => {
 Create `apps/syllables-cli/src/lib/read-input.spec.ts`:
 
 ```ts
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from "vitest";
 
-import { resolveInputRequest } from './read-input';
+import { resolveInputRequest } from "./read-input";
 
-describe('resolveInputRequest', () => {
-  it('chooses stdin when data is piped and no file path is provided', () => {
+describe("resolveInputRequest", () => {
+  it("chooses stdin when data is piped and no file path is provided", () => {
     expect(
       resolveInputRequest({
         inputPath: undefined,
         stdinIsTty: false,
-      })
-    ).toEqual({ source: 'stdin' });
+      }),
+    ).toEqual({ source: "stdin" });
   });
 
-  it('rejects missing input', () => {
+  it("rejects missing input", () => {
     expect(() =>
       resolveInputRequest({
         inputPath: undefined,
         stdinIsTty: true,
-      })
+      }),
     ).toThrow(/provide a file path or pipe input/i);
   });
 
-  it('rejects file input combined with piped stdin', () => {
+  it("rejects file input combined with piped stdin", () => {
     expect(() =>
       resolveInputRequest({
-        inputPath: 'input.txt',
+        inputPath: "input.txt",
         stdinIsTty: false,
-      })
+      }),
     ).toThrow(/use either a file path or stdin/i);
   });
 });
 ```
 
-- [ ] **Step 2: Run the CLI tests to verify the parser layer is missing**
+- [x] **Step 2: Run the CLI tests to verify the parser layer is missing**
 
 Run:
 
@@ -787,17 +823,17 @@ pnpm exec nx test syllables-cli
 
 Expected: FAIL because `parseCliArgs` and `resolveInputRequest` do not exist yet.
 
-- [ ] **Step 3: Implement argument parsing and input-source validation**
+- [x] **Step 3: Implement argument parsing and input-source validation**
 
 Create `apps/syllables-cli/src/lib/parse-cli-args.ts`:
 
 ```ts
-import type { SortSpec } from '@nonsense/syllables-core';
+import type { SortSpec } from "@nonsense/syllables-core";
 
 export interface CliOptions {
   inputPath?: string;
   outputPath?: string;
-  format: 'csv' | 'json';
+  format: "csv" | "json";
   header: boolean;
   limit: number;
   sort: SortSpec[];
@@ -805,7 +841,7 @@ export interface CliOptions {
 
 export function parseCliArgs(argv: string[]): CliOptions {
   const options: CliOptions = {
-    format: 'csv',
+    format: "csv",
     header: false,
     limit: 100,
     sort: [],
@@ -813,13 +849,14 @@ export function parseCliArgs(argv: string[]): CliOptions {
 
   for (let index = 0; index < argv.length; index += 1) {
     const value = argv[index];
-    if (!value.startsWith('--')) {
-      if (options.inputPath) throw new Error('Provide a single input file path.');
+    if (!value.startsWith("--")) {
+      if (options.inputPath)
+        throw new Error("Provide a single input file path.");
       options.inputPath = value;
       continue;
     }
 
-    if (value === '--header') {
+    if (value === "--header") {
       options.header = true;
       continue;
     }
@@ -827,32 +864,34 @@ export function parseCliArgs(argv: string[]): CliOptions {
     const next = argv[index + 1];
     if (!next) throw new Error(`${value} requires a value.`);
 
-    if (value === '--format') {
-      if (next !== 'csv' && next !== 'json') throw new Error('Invalid format.');
+    if (value === "--format") {
+      if (next !== "csv" && next !== "json") throw new Error("Invalid format.");
       options.format = next;
       index += 1;
       continue;
     }
 
-    if (value === '--output') {
+    if (value === "--output") {
       options.outputPath = next;
       index += 1;
       continue;
     }
 
-    if (value === '--limit') {
+    if (value === "--limit") {
       const parsed = Number(next);
-      if (!Number.isInteger(parsed) || parsed < 1) throw new Error('Invalid limit.');
+      if (!Number.isInteger(parsed) || parsed < 1)
+        throw new Error("Invalid limit.");
       options.limit = parsed;
       index += 1;
       continue;
     }
 
-    if (value === '--sort') {
-      const [field, direction] = next.split(':');
-      if (field !== 'count' && field !== 'syllable') throw new Error('Invalid sort field.');
-      if (direction !== 'asc' && direction !== 'desc') {
-        throw new Error('Invalid sort direction.');
+    if (value === "--sort") {
+      const [field, direction] = next.split(":");
+      if (field !== "count" && field !== "syllable")
+        throw new Error("Invalid sort field.");
+      if (direction !== "asc" && direction !== "desc") {
+        throw new Error("Invalid sort direction.");
       }
       options.sort.push({ field, direction });
       index += 1;
@@ -872,21 +911,21 @@ Create `apps/syllables-cli/src/lib/read-input.ts` with:
 export function resolveInputRequest(input: {
   inputPath?: string;
   stdinIsTty: boolean;
-}): { source: 'file'; path: string } | { source: 'stdin' } {
+}): { source: "file"; path: string } | { source: "stdin" } {
   if (input.inputPath && !input.stdinIsTty) {
-    throw new Error('Use either a file path or stdin, not both.');
+    throw new Error("Use either a file path or stdin, not both.");
   }
   if (input.inputPath) {
-    return { source: 'file', path: input.inputPath };
+    return { source: "file", path: input.inputPath };
   }
   if (!input.stdinIsTty) {
-    return { source: 'stdin' };
+    return { source: "stdin" };
   }
-  throw new Error('Provide a file path or pipe input on stdin.');
+  throw new Error("Provide a file path or pipe input on stdin.");
 }
 ```
 
-- [ ] **Step 4: Run the CLI tests again**
+- [x] **Step 4: Run the CLI tests again**
 
 Run:
 
@@ -896,7 +935,7 @@ pnpm exec nx test syllables-cli
 
 Expected: PASS for parser defaults and input-rule validation.
 
-- [ ] **Step 5: Commit the CLI parser layer**
+- [x] **Step 5: Commit the CLI parser layer**
 
 Run:
 
@@ -908,6 +947,7 @@ git commit -m "feat: add CLI argument parsing"
 ### Task 6: Add CSV/JSON serializers and output writing
 
 **Files:**
+
 - Create: `apps/syllables-cli/src/lib/serialize-csv.ts`, `apps/syllables-cli/src/lib/serialize-csv.spec.ts`,
   `apps/syllables-cli/src/lib/serialize-json.ts`, `apps/syllables-cli/src/lib/serialize-json.spec.ts`,
   `apps/syllables-cli/src/lib/write-output.ts`, `apps/syllables-cli/src/lib/write-output.spec.ts`
@@ -919,23 +959,25 @@ git commit -m "feat: add CLI argument parsing"
 Create `apps/syllables-cli/src/lib/serialize-csv.spec.ts`:
 
 ```ts
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from "vitest";
 
-import { serializeCsv } from './serialize-csv';
+import { serializeCsv } from "./serialize-csv";
 
-describe('serializeCsv', () => {
-  it('defaults to semicolon-separated rows with quoted syllables', () => {
-    expect(serializeCsv([{ syllable: 'la', count: 2 }], { header: false })).toBe('"la";2\n');
+describe("serializeCsv", () => {
+  it("defaults to semicolon-separated rows with quoted syllables", () => {
+    expect(
+      serializeCsv([{ syllable: "la", count: 2 }], { header: false }),
+    ).toBe('"la";2\n');
   });
 
-  it('adds the quoted header row when requested', () => {
-    expect(serializeCsv([{ syllable: 'la', count: 2 }], { header: true })).toBe(
-      '"syllable";count\n"la";2\n'
+  it("adds the quoted header row when requested", () => {
+    expect(serializeCsv([{ syllable: "la", count: 2 }], { header: true })).toBe(
+      '"syllable";count\n"la";2\n',
     );
   });
 
-  it('preserves the empty-output contract', () => {
-    expect(serializeCsv([], { header: false })).toBe('');
+  it("preserves the empty-output contract", () => {
+    expect(serializeCsv([], { header: false })).toBe("");
     expect(serializeCsv([], { header: true })).toBe('"syllable";count\n');
   });
 });
@@ -944,22 +986,24 @@ describe('serializeCsv', () => {
 Create `apps/syllables-cli/src/lib/serialize-json.spec.ts`:
 
 ```ts
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from "vitest";
 
-import { serializeJson } from './serialize-json';
+import { serializeJson } from "./serialize-json";
 
-describe('serializeJson', () => {
-  it('serializes ranked entries as a JSON array', () => {
+describe("serializeJson", () => {
+  it("serializes ranked entries as a JSON array", () => {
     expect(
       serializeJson([
-        { syllable: 'la', count: 2 },
-        { syllable: 'ble', count: 2 },
-      ])
-    ).toBe('[\n  {\n    "syllable": "la",\n    "count": 2\n  },\n  {\n    "syllable": "ble",\n    "count": 2\n  }\n]\n');
+        { syllable: "la", count: 2 },
+        { syllable: "ble", count: 2 },
+      ]),
+    ).toBe(
+      '[\n  {\n    "syllable": "la",\n    "count": 2\n  },\n  {\n    "syllable": "ble",\n    "count": 2\n  }\n]\n',
+    );
   });
 
-  it('serializes empty results as an empty JSON array', () => {
-    expect(serializeJson([])).toBe('[]\n');
+  it("serializes empty results as an empty JSON array", () => {
+    expect(serializeJson([])).toBe("[]\n");
   });
 });
 ```
@@ -967,30 +1011,35 @@ describe('serializeJson', () => {
 Create `apps/syllables-cli/src/lib/write-output.spec.ts`:
 
 ```ts
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from "vitest";
 
-import { writeOutput } from './write-output';
+import { writeOutput } from "./write-output";
 
-describe('writeOutput', () => {
-  it('writes to stdout when no output path is provided', async () => {
+describe("writeOutput", () => {
+  it("writes to stdout when no output path is provided", async () => {
     const stdout = { write: vi.fn() };
 
-    await writeOutput({ content: '"la";2\n', outputPath: undefined, stdout, writeFile: vi.fn() });
+    await writeOutput({
+      content: '"la";2\n',
+      outputPath: undefined,
+      stdout,
+      writeFile: vi.fn(),
+    });
 
     expect(stdout.write).toHaveBeenCalledWith('"la";2\n');
   });
 
-  it('writes to a file when an output path is provided', async () => {
+  it("writes to a file when an output path is provided", async () => {
     const writeFile = vi.fn();
 
     await writeOutput({
       content: '"la";2\n',
-      outputPath: 'result.csv',
+      outputPath: "result.csv",
       stdout: { write: vi.fn() },
       writeFile,
     });
 
-    expect(writeFile).toHaveBeenCalledWith('result.csv', '"la";2\n', 'utf8');
+    expect(writeFile).toHaveBeenCalledWith("result.csv", '"la";2\n', "utf8");
   });
 });
 ```
@@ -1010,22 +1059,28 @@ Expected: FAIL because the serializer/output helpers do not exist yet.
 Create `apps/syllables-cli/src/lib/serialize-csv.ts`:
 
 ```ts
-import type { RankedSyllableEntry } from '@nonsense/syllables-core';
+import type { RankedSyllableEntry } from "@nonsense/syllables-core";
 
 export function serializeCsv(
   entries: RankedSyllableEntry[],
-  options: { header: boolean }
+  options: { header: boolean },
 ): string {
-  const rows = entries.map(({ syllable, count }) => `"${syllable.replaceAll('"', '""')}";${count}`);
+  const rows = entries.map(
+    ({ syllable, count }) => `"${syllable.replaceAll('"', '""')}";${count}`,
+  );
   if (options.header) rows.unshift('"syllable";count');
-  return rows.length === 0 ? (options.header ? '"syllable";count\n' : '') : `${rows.join('\n')}\n`;
+  return rows.length === 0
+    ? options.header
+      ? '"syllable";count\n'
+      : ""
+    : `${rows.join("\n")}\n`;
 }
 ```
 
 Create `apps/syllables-cli/src/lib/serialize-json.ts`:
 
 ```ts
-import type { RankedSyllableEntry } from '@nonsense/syllables-core';
+import type { RankedSyllableEntry } from "@nonsense/syllables-core";
 
 export function serializeJson(entries: RankedSyllableEntry[]): string {
   return `${JSON.stringify(entries, null, 2)}\n`;
@@ -1035,7 +1090,7 @@ export function serializeJson(entries: RankedSyllableEntry[]): string {
 Create `apps/syllables-cli/src/lib/write-output.ts`:
 
 ```ts
-import { promises as fs } from 'node:fs';
+import { promises as fs } from "node:fs";
 
 export async function writeOutput(input: {
   content: string;
@@ -1045,7 +1100,7 @@ export async function writeOutput(input: {
 }) {
   const writeFile = input.writeFile ?? fs.writeFile;
   if (input.outputPath) {
-    await writeFile(input.outputPath, input.content, 'utf8');
+    await writeFile(input.outputPath, input.content, "utf8");
     return;
   }
   input.stdout.write(input.content);
@@ -1074,6 +1129,7 @@ git commit -m "feat: add CLI output formatters"
 ### Task 7: Wire the CLI runner to the reusable core library
 
 **Files:**
+
 - Create: `apps/syllables-cli/src/lib/run-cli.ts`, `apps/syllables-cli/src/lib/run-cli.spec.ts`,
   `apps/syllables-cli/src/lib/run-main.ts`, `apps/syllables-cli/src/lib/run-main.spec.ts`
 - Modify: `apps/syllables-cli/src/main.ts`
@@ -1084,88 +1140,76 @@ git commit -m "feat: add CLI output formatters"
 Create `apps/syllables-cli/src/lib/run-cli.spec.ts`:
 
 ```ts
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from "vitest";
 
-import { runCli } from './run-cli';
+import { runCli } from "./run-cli";
 
-describe('runCli', () => {
-  it('writes default CSV-without-header output for file input', async () => {
+describe("runCli", () => {
+  it("writes default CSV-without-header output for file input", async () => {
     const stdout = { write: vi.fn() };
 
-    await runCli(
-      ['input.txt'],
-      {
-        stdinIsTty: true,
-        stdinText: '',
-        stdout,
-        readFile: vi.fn().mockResolvedValue('syllable common syllable'),
-        writeFile: vi.fn(),
-      }
-    );
+    await runCli(["input.txt"], {
+      stdinIsTty: true,
+      stdinText: "",
+      stdout,
+      readFile: vi.fn().mockResolvedValue("syllable common syllable"),
+      writeFile: vi.fn(),
+    });
 
-    expect(stdout.write).toHaveBeenCalledWith('"ble";2\n"la";2\n"syl";2\n"com";1\n"mon";1\n');
+    expect(stdout.write).toHaveBeenCalledWith(
+      '"ble";2\n"la";2\n"syl";2\n"com";1\n"mon";1\n',
+    );
   });
 
-  it('writes JSON to a file when explicitly requested', async () => {
+  it("writes JSON to a file when explicitly requested", async () => {
     const writeFile = vi.fn();
 
-    await runCli(
-      ['input.txt', '--format', 'json', '--output', 'result.json'],
-      {
-        stdinIsTty: true,
-        stdinText: '',
-        stdout: { write: vi.fn() },
-        readFile: vi.fn().mockResolvedValue('syllable common syllable'),
-        writeFile,
-      }
-    );
+    await runCli(["input.txt", "--format", "json", "--output", "result.json"], {
+      stdinIsTty: true,
+      stdinText: "",
+      stdout: { write: vi.fn() },
+      readFile: vi.fn().mockResolvedValue("syllable common syllable"),
+      writeFile,
+    });
 
     expect(writeFile).toHaveBeenCalledWith(
-      'result.json',
+      "result.json",
       expect.stringContaining('"syllable": "ble"'),
-      'utf8'
+      "utf8",
     );
   });
 
-  it('wires header, custom sorting, and limit through the full CLI flow', async () => {
+  it("wires header, custom sorting, and limit through the full CLI flow", async () => {
     const stdout = { write: vi.fn() };
 
     await runCli(
-      [
-        'input.txt',
-        '--header',
-        '--limit',
-        '2',
-        '--sort',
-        'syllable:asc',
-      ],
+      ["input.txt", "--header", "--limit", "2", "--sort", "syllable:asc"],
       {
         stdinIsTty: true,
-        stdinText: '',
+        stdinText: "",
         stdout,
-        readFile: vi.fn().mockResolvedValue('syllable common syllable'),
+        readFile: vi.fn().mockResolvedValue("syllable common syllable"),
         writeFile: vi.fn(),
-      }
+      },
     );
 
-    expect(stdout.write).toHaveBeenCalledWith('"syllable";count\n"ble";2\n"la";2\n');
+    expect(stdout.write).toHaveBeenCalledWith(
+      '"syllable";count\n"ble";2\n"la";2\n',
+    );
   });
 
-  it('treats no-syllable input as a successful empty CSV result', async () => {
+  it("treats no-syllable input as a successful empty CSV result", async () => {
     const stdout = { write: vi.fn() };
 
-    await runCli(
-      ['input.txt'],
-      {
-        stdinIsTty: true,
-        stdinText: '',
-        stdout,
-        readFile: vi.fn().mockResolvedValue('12345 !!!'),
-        writeFile: vi.fn(),
-      }
-    );
+    await runCli(["input.txt"], {
+      stdinIsTty: true,
+      stdinText: "",
+      stdout,
+      readFile: vi.fn().mockResolvedValue("12345 !!!"),
+      writeFile: vi.fn(),
+    });
 
-    expect(stdout.write).toHaveBeenCalledWith('');
+    expect(stdout.write).toHaveBeenCalledWith("");
   });
 });
 ```
@@ -1173,17 +1217,19 @@ describe('runCli', () => {
 Create `apps/syllables-cli/src/lib/run-main.spec.ts`:
 
 ```ts
-import { Readable } from 'node:stream';
-import { describe, expect, it, vi } from 'vitest';
+import { Readable } from "node:stream";
+import { describe, expect, it, vi } from "vitest";
 
-import { runMain } from './run-main';
+import { runMain } from "./run-main";
 
-describe('runMain', () => {
-  it('reads stdin lazily only when stdin is piped', async () => {
-    const stdin = { isTTY: true } as NodeJS.ReadableStream & { isTTY?: boolean };
+describe("runMain", () => {
+  it("reads stdin lazily only when stdin is piped", async () => {
+    const stdin = { isTTY: true } as NodeJS.ReadableStream & {
+      isTTY?: boolean;
+    };
     const runCliImpl = vi.fn().mockResolvedValue(undefined);
 
-    await runMain(['input.txt'], {
+    await runMain(["input.txt"], {
       stdin,
       stdout: { write: vi.fn() },
       stderr: { write: vi.fn() },
@@ -1192,17 +1238,17 @@ describe('runMain', () => {
     });
 
     expect(runCliImpl).toHaveBeenCalledWith(
-      ['input.txt'],
-      expect.objectContaining({ stdinIsTty: true, stdinText: '' })
+      ["input.txt"],
+      expect.objectContaining({ stdinIsTty: true, stdinText: "" }),
     );
   });
 
   it.each([
-    'Provide a file path or pipe input on stdin.',
-    'Could not read input file: input.txt',
-    'Could not write output file: result.json',
-    'Could not analyze syllables.',
-  ])('prints %s to stderr and sets exit code 1 on failure', async (message) => {
+    "Provide a file path or pipe input on stdin.",
+    "Could not read input file: input.txt",
+    "Could not write output file: result.json",
+    "Could not analyze syllables.",
+  ])("prints %s to stderr and sets exit code 1 on failure", async (message) => {
     const stderr = { write: vi.fn() };
     const setExitCode = vi.fn();
 
@@ -1218,8 +1264,10 @@ describe('runMain', () => {
     expect(setExitCode).toHaveBeenCalledWith(1);
   });
 
-  it('reads piped stdin before delegating to runCli', async () => {
-    const stdin = Readable.from(['syllable common syllable']) as NodeJS.ReadableStream & {
+  it("reads piped stdin before delegating to runCli", async () => {
+    const stdin = Readable.from([
+      "syllable common syllable",
+    ]) as NodeJS.ReadableStream & {
       isTTY?: boolean;
     };
     stdin.isTTY = false;
@@ -1237,8 +1285,8 @@ describe('runMain', () => {
       [],
       expect.objectContaining({
         stdinIsTty: false,
-        stdinText: 'syllable common syllable',
-      })
+        stdinText: "syllable common syllable",
+      }),
     );
   });
 });
@@ -1259,19 +1307,19 @@ Expected: FAIL because `runCli` does not exist yet.
 Create `apps/syllables-cli/src/lib/run-cli.ts`:
 
 ```ts
-import { promises as fs } from 'node:fs';
+import { promises as fs } from "node:fs";
 
 import {
   analyzeSyllableCounts,
   createHypherSyllableExtractor,
   rankSyllableCounts,
-} from '@nonsense/syllables-core';
+} from "@nonsense/syllables-core";
 
-import { parseCliArgs } from './parse-cli-args';
-import { resolveInputRequest } from './read-input';
-import { serializeCsv } from './serialize-csv';
-import { serializeJson } from './serialize-json';
-import { writeOutput } from './write-output';
+import { parseCliArgs } from "./parse-cli-args";
+import { resolveInputRequest } from "./read-input";
+import { serializeCsv } from "./serialize-csv";
+import { serializeJson } from "./serialize-json";
+import { writeOutput } from "./write-output";
 
 export interface RunCliDeps {
   stdinIsTty: boolean;
@@ -1291,23 +1339,28 @@ export async function runCli(argv: string[], deps: RunCliDeps): Promise<void> {
   let text: string;
   try {
     text =
-      input.source === 'file'
-        ? await (deps.readFile ?? fs.readFile)(input.path, 'utf8')
+      input.source === "file"
+        ? await (deps.readFile ?? fs.readFile)(input.path, "utf8")
         : deps.stdinText;
   } catch {
-    throw new Error(`Could not read input file: ${input.source === 'file' ? input.path : 'stdin'}`);
+    throw new Error(
+      `Could not read input file: ${input.source === "file" ? input.path : "stdin"}`,
+    );
   }
 
   let ranked;
   try {
     const counts = analyzeSyllableCounts(text, createHypherSyllableExtractor());
-    ranked = rankSyllableCounts(counts, { limit: options.limit, sort: options.sort });
+    ranked = rankSyllableCounts(counts, {
+      limit: options.limit,
+      sort: options.sort,
+    });
   } catch {
-    throw new Error('Could not analyze syllables.');
+    throw new Error("Could not analyze syllables.");
   }
 
   const content =
-    options.format === 'json'
+    options.format === "json"
       ? serializeJson(ranked)
       : serializeCsv(ranked, { header: options.header });
 
@@ -1319,7 +1372,9 @@ export async function runCli(argv: string[], deps: RunCliDeps): Promise<void> {
       writeFile: deps.writeFile,
     });
   } catch {
-    throw new Error(`Could not write output file: ${options.outputPath ?? 'stdout'}`);
+    throw new Error(
+      `Could not write output file: ${options.outputPath ?? "stdout"}`,
+    );
   }
 }
 ```
@@ -1329,7 +1384,7 @@ Error contract: `runCli` should throw validation and I/O errors to its caller; i
 Create `apps/syllables-cli/src/lib/run-main.ts`:
 
 ```ts
-import { runCli, type RunCliDeps } from './run-cli';
+import { runCli, type RunCliDeps } from "./run-cli";
 
 async function readStdin(stream: NodeJS.ReadableStream): Promise<string> {
   return new Response(stream as unknown as BodyInit).text();
@@ -1339,17 +1394,17 @@ export async function runMain(
   argv: string[],
   input: {
     stdin: NodeJS.ReadableStream & { isTTY?: boolean };
-    stdout: RunCliDeps['stdout'];
+    stdout: RunCliDeps["stdout"];
     stderr: { write(content: string): void };
-    readFile?: RunCliDeps['readFile'];
-    writeFile?: RunCliDeps['writeFile'];
+    readFile?: RunCliDeps["readFile"];
+    writeFile?: RunCliDeps["writeFile"];
     runCliImpl?: typeof runCli;
     setExitCode?: (code: number) => void;
-  }
+  },
 ) {
   try {
     const stdinIsTty = input.stdin.isTTY ?? true;
-    const stdinText = stdinIsTty ? '' : await readStdin(input.stdin);
+    const stdinText = stdinIsTty ? "" : await readStdin(input.stdin);
 
     await (input.runCliImpl ?? runCli)(argv, {
       stdinIsTty,
@@ -1359,8 +1414,10 @@ export async function runMain(
       writeFile: input.writeFile,
     });
   } catch (error) {
-    input.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
-    (input.setExitCode ?? ((code) => process.exitCode = code))(1);
+    input.stderr.write(
+      `${error instanceof Error ? error.message : String(error)}\n`,
+    );
+    (input.setExitCode ?? ((code) => (process.exitCode = code)))(1);
   }
 }
 ```
@@ -1368,7 +1425,7 @@ export async function runMain(
 Update `apps/syllables-cli/src/main.ts`:
 
 ```ts
-import { runMain } from './lib/run-main';
+import { runMain } from "./lib/run-main";
 
 await runMain(process.argv.slice(2), {
   stdin: process.stdin,
@@ -1406,6 +1463,7 @@ git commit -m "feat: wire syllable analysis CLI"
 ### Task 8: Add usage docs and run the final workspace verification
 
 **Files:**
+
 - Create: `README.md`
 - Modify: `package.json` (only if a convenient root script is missing)
 - Test: full workspace verification commands
@@ -1419,18 +1477,18 @@ Create `README.md` with:
 
 ## Setup
 
-~~~bash
+```bash
 pnpm install
-~~~
+```
 
 ## Run the CLI
 
-~~~bash
+```bash
 pnpm exec nx build syllables-cli
 node dist/apps/syllables-cli/main.js input.txt
 cat input.txt | node dist/apps/syllables-cli/main.js
 node dist/apps/syllables-cli/main.js input.txt --format json --output result.json
-~~~
+```
 ```
 
 Document the default behavior explicitly:
