@@ -9,6 +9,12 @@ describe("serializeCsv", () => {
     ).toBe('"la";2\n');
   });
 
+  it("escapes embedded quotes in syllables", () => {
+    expect(
+      serializeCsv([{ syllable: 'a"b', count: 1 }], { header: false }),
+    ).toBe('"a""b";1\n');
+  });
+
   it("adds the quoted header row when requested", () => {
     expect(serializeCsv([{ syllable: "la", count: 2 }], { header: true })).toBe(
       '"syllable";count\n"la";2\n',
