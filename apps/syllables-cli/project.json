@@ -47,6 +47,15 @@
     "prune-lockfile": {
       "dependsOn": ["add-shebang"],
       "cache": true,
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/apps/syllables-cli/dist/main.js"],
+      "options": {
+        "command": "node -e \"const fs=require('fs'),f='apps/syllables-cli/dist/main.js',c=fs.readFileSync(f,'utf-8');if(!c.startsWith('#!/usr/bin/env node\\n'))fs.writeFileSync(f,'#!/usr/bin/env node\\n'+c);\""
+      }
+    },
+    "prune-lockfile": {
+      "dependsOn": ["add-shebang"],
+      "cache": true,
       "executor": "@nx/js:prune-lockfile",
       "outputs": [
         "{workspaceRoot}/apps/syllables-cli/dist/package.json",
