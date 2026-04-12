@@ -1,7 +1,9 @@
 {
   "name": "syllables-cli",
   "version": "0.0.1",
-  "private": true,
+  "bin": {
+    "syllables-cli": "./main.js"
+  },
   "dependencies": {
     "@nonsense/syllables-core": "workspace:*"
   }

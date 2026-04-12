@@ -35,8 +35,17 @@
         }
       }
     },
-    "prune-lockfile": {
+    "add-shebang": {
       "dependsOn": ["build"],
+      "cache": true,
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/apps/syllables-cli/dist/main.js"],
+      "options": {
+        "command": "node -e \"const fs=require('fs'),f='apps/syllables-cli/dist/main.js',c=fs.readFileSync(f,'utf-8');if(!c.startsWith('#!/usr/bin/env node\\n'))fs.writeFileSync(f,'#!/usr/bin/env node\\n'+c);\""
+      }
+    },
+    "prune-lockfile": {
+      "dependsOn": ["add-shebang"],
       "cache": true,
       "executor": "@nx/js:prune-lockfile",
       "outputs": [
@@ -59,6 +68,9 @@
     "prune": {
       "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
       "executor": "nx:noop"
+    },
+    "test": {
+      "dependsOn": ["prune-lockfile"]
     },
     "serve": {
       "continuous": true,

@@ -6,13 +6,28 @@
 pnpm install
 ```
 
-## Run the CLI
+## Package the CLI
 
 ```bash
-pnpm exec nx build syllables-cli
-node dist/apps/syllables-cli/main.js input.txt
-cat input.txt | node dist/apps/syllables-cli/main.js
-node dist/apps/syllables-cli/main.js input.txt --format json --output result.json
+pnpm exec nx run syllables-cli:prune
+```
+
+## Install and run
+
+### Global install (recommended)
+
+```bash
+npm install -g ./apps/syllables-cli/dist
+syllables-cli input.txt
+cat input.txt | syllables-cli
+syllables-cli input.txt --format json --output result.json
+```
+
+### Project-local install
+
+```bash
+npm install ./apps/syllables-cli/dist
+npx --no-install syllables-cli input.txt
 ```
 
 Default behavior:
