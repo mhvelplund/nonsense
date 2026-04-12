@@ -1,0 +1,27 @@
+{
+  "name": "nx-syllables",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "devDependencies": {
+    "@nx/esbuild": "22.6.5",
+    "@nx/js": "^22.6.5",
+    "@nx/node": "^22.6.5",
+    "@nx/vitest": "22.6.5",
+    "@swc-node/register": "~1.11.1",
+    "@swc/core": "~1.15.5",
+    "@swc/helpers": "~0.5.18",
+    "@types/node": "^25.6.0",
+    "@vitest/coverage-v8": "~4.1.0",
+    "esbuild": "^0.27.0",
+    "nx": "22.6.5",
+    "tslib": "^2.3.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.0",
+    "vitest": "^4.1.4"
+  },
+  "dependencies": {
+    "hyphenation.en-us": "^0.2.1",
+    "hypher": "^0.2.5"
+  }
+}
