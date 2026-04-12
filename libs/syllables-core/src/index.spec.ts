@@ -1,7 +1,10 @@
+import { expect } from "vitest";
 import * as syllablesCore from "./index.js";
 
-describe("syllables-core scaffold", () => {
-  it("exports an object", () => {
-    expect(Object.keys(syllablesCore)).toEqual([]);
+describe("syllables-core", () => {
+  it("exports analyzeSyllableCounts", () => {
+    expect(syllablesCore).toMatchObject({
+      analyzeSyllableCounts: expect.any(Function),
+    });
   });
 });
