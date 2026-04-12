@@ -8,6 +8,7 @@ import { describe, expect, it } from "vitest";
 const distDir = resolve(__dirname, "../dist");
 const pkgPath = resolve(distDir, "package.json");
 const entrypointPath = resolve(distDir, "main.js");
+const readmePath = resolve(__dirname, "../../../README.md");
 
 describe("syllables-cli dist/package.json", () => {
   it("has a bin entry pointing to ./main.js", () => {
@@ -48,5 +49,19 @@ describe("syllables-cli dist non-entrypoint JS files", () => {
         `${filePath} should not start with shebang`,
       ).toBe(false);
     }
+  });
+});
+
+describe("README local package usage", () => {
+  it("documents running the packaged entrypoint directly instead of workspace-local npm install", () => {
+    const readme = readFileSync(readmePath, "utf-8");
+
+    expect(readme).toContain(
+      "node ./apps/syllables-cli/dist/main.js input.txt",
+    );
+    expect(readme).not.toContain("npm install ./apps/syllables-cli/dist");
+    expect(readme).not.toContain(
+      "npx --yes --package ./apps/syllables-cli/dist syllables-cli input.txt",
+    );
   });
 });

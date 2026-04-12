@@ -5,6 +5,7 @@
     "syllables-cli": "./main.js"
   },
   "dependencies": {
-    "@nonsense/syllables-core": "workspace:*"
+    "@nonsense/syllables-core": "workspace:*",
+    "commander": "^14.0.3"
   }
 }

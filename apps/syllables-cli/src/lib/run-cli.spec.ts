@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import type { CliOptions } from "./parse-cli-args";
+
 const coreMocks = vi.hoisted(() => ({
   analyzeSyllableCounts: vi.fn(),
 }));
@@ -21,6 +23,16 @@ vi.mock("@nonsense/syllables-core", async () => {
 
 import { runCli } from "./run-cli";
 
+function createOptions(overrides: Partial<CliOptions> = {}): CliOptions {
+  return {
+    format: "csv",
+    header: false,
+    limit: 100,
+    sort: [],
+    ...overrides,
+  };
+}
+
 describe("runCli", () => {
   afterEach(() => {
     vi.clearAllMocks();
@@ -30,7 +42,7 @@ describe("runCli", () => {
     const readFile = vi.fn().mockResolvedValue("Syllable common syllable");
     const stdout = { write: vi.fn() };
 
-    await runCli(["input.txt"], {
+    await runCli(createOptions({ inputPath: "input.txt" }), {
       stdinIsTty: true,
       stdinText: "",
       stdout,
@@ -48,13 +60,20 @@ describe("runCli", () => {
     const writeFile = vi.fn();
     const stdout = { write: vi.fn() };
 
-    await runCli(["--format", "json", "--output", "result.json", "input.txt"], {
-      stdinIsTty: true,
-      stdinText: "",
-      stdout,
-      readFile: vi.fn().mockResolvedValue("Syllable"),
-      writeFile,
-    });
+    await runCli(
+      createOptions({
+        inputPath: "input.txt",
+        outputPath: "result.json",
+        format: "json",
+      }),
+      {
+        stdinIsTty: true,
+        stdinText: "",
+        stdout,
+        readFile: vi.fn().mockResolvedValue("Syllable"),
+        writeFile,
+      },
+    );
 
     expect(writeFile).toHaveBeenCalledWith(
       "result.json",
@@ -76,16 +95,15 @@ describe("runCli", () => {
     const stdout = { write: vi.fn() };
 
     await runCli(
-      [
-        "--header",
-        "--limit",
-        "4",
-        "--sort",
-        "count:asc",
-        "--sort",
-        "syllable:desc",
-        "input.txt",
-      ],
+      createOptions({
+        inputPath: "input.txt",
+        header: true,
+        limit: 4,
+        sort: [
+          { field: "count", direction: "asc" },
+          { field: "syllable", direction: "desc" },
+        ],
+      }),
       {
         stdinIsTty: true,
         stdinText: "",
@@ -102,17 +120,8 @@ describe("runCli", () => {
 
   it.each([
     {
-      name: "invalid argv parsing",
-      argv: ["--format", "yaml"],
-      deps: {
-        stdinIsTty: true,
-        stdinText: "",
-      },
-      message: "Invalid format.",
-    },
-    {
       name: "missing input source validation",
-      argv: [],
+      options: createOptions(),
       deps: {
         stdinIsTty: true,
         stdinText: "",
@@ -121,16 +130,16 @@ describe("runCli", () => {
     },
     {
       name: "mixed file and stdin validation",
-      argv: ["input.txt"],
+      options: createOptions({ inputPath: "input.txt" }),
       deps: {
         stdinIsTty: false,
         stdinText: "syllable",
       },
       message: "Use either a file path or stdin, not both.",
     },
-  ])("propagates $name failures", async ({ argv, deps, message }) => {
+  ])("propagates $name failures", async ({ options, deps, message }) => {
     await expect(
-      runCli(argv, {
+      runCli(options, {
         ...deps,
         stdout: { write: vi.fn() },
         readFile: vi.fn(),
@@ -141,7 +150,7 @@ describe("runCli", () => {
 
   it("normalizes input file read failures", async () => {
     await expect(
-      runCli(["input.txt"], {
+      runCli(createOptions({ inputPath: "input.txt" }), {
         stdinIsTty: true,
         stdinText: "",
         stdout: { write: vi.fn() },
@@ -157,7 +166,7 @@ describe("runCli", () => {
     });
 
     await expect(
-      runCli(["input.txt"], {
+      runCli(createOptions({ inputPath: "input.txt" }), {
         stdinIsTty: true,
         stdinText: "",
         stdout: { write: vi.fn() },
@@ -169,20 +178,26 @@ describe("runCli", () => {
 
   it("normalizes output file write failures", async () => {
     await expect(
-      runCli(["--output", "result.json", "input.txt"], {
-        stdinIsTty: true,
-        stdinText: "",
-        stdout: { write: vi.fn() },
-        readFile: vi.fn().mockResolvedValue("Syllable"),
-        writeFile: vi.fn().mockRejectedValue(new Error("boom")),
-      }),
+      runCli(
+        createOptions({
+          inputPath: "input.txt",
+          outputPath: "result.json",
+        }),
+        {
+          stdinIsTty: true,
+          stdinText: "",
+          stdout: { write: vi.fn() },
+          readFile: vi.fn().mockResolvedValue("Syllable"),
+          writeFile: vi.fn().mockRejectedValue(new Error("boom")),
+        },
+      ),
     ).rejects.toThrow("Could not write output file: result.json");
   });
 
   it("succeeds with empty csv output when non-syllable noise produces no syllables", async () => {
     const stdout = { write: vi.fn() };
 
-    await runCli(["input.txt"], {
+    await runCli(createOptions({ inputPath: "input.txt" }), {
       stdinIsTty: true,
       stdinText: "",
       stdout,

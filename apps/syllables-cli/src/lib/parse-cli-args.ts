@@ -1,3 +1,5 @@
+import { Command, InvalidArgumentError, Option } from "commander";
+
 import type { SortSpec } from "@nonsense/syllables-core";
 
 export interface CliOptions {
@@ -9,96 +11,101 @@ export interface CliOptions {
   sort: SortSpec[];
 }
 
-function readFlagValue(flag: string, argv: string[], index: number): string {
-  const next = argv[index + 1];
-  if (!next || next.startsWith("-")) {
-    throw new Error(`${flag} requires a value.`);
-  }
-
-  return next;
+interface CommandOptions {
+  format?: "csv" | "json";
+  header?: boolean;
+  output?: string;
+  limit?: number;
+  sort?: SortSpec[];
 }
 
-export function parseCliArgs(argv: string[]): CliOptions {
-  const options: CliOptions = {
-    format: "csv",
-    header: false,
-    limit: 100,
-    sort: [],
-  };
+interface CommandOutput {
+  stdout: { write(content: string): void };
+  stderr: { write(content: string): void };
+}
 
-  for (let index = 0; index < argv.length; index += 1) {
-    const value = argv[index];
-    if (!value.startsWith("-")) {
-      if (options.inputPath) {
-        throw new Error("Provide a single input file path.");
-      }
-
-      options.inputPath = value;
-      continue;
-    }
-
-    if (!value.startsWith("--")) {
-      throw new Error(`Unknown flag: ${value}`);
-    }
-
-    if (value === "--header") {
-      options.header = true;
-      continue;
-    }
-
-    if (value === "--format") {
-      const next = readFlagValue(value, argv, index);
-      if (next !== "csv" && next !== "json") {
-        throw new Error("Invalid format.");
-      }
-
-      options.format = next;
-      index += 1;
-      continue;
-    }
-
-    if (value === "--output") {
-      const next = readFlagValue(value, argv, index);
-      options.outputPath = next;
-      index += 1;
-      continue;
-    }
-
-    if (value === "--limit") {
-      const next = readFlagValue(value, argv, index);
-      const parsed = Number(next);
-      if (!Number.isInteger(parsed) || parsed < 1) {
-        throw new Error("Invalid limit.");
-      }
-
-      options.limit = parsed;
-      index += 1;
-      continue;
-    }
-
-    if (value === "--sort") {
-      const next = readFlagValue(value, argv, index);
-      const parts = next.split(":");
-      if (parts.length !== 2) {
-        throw new Error("Invalid sort direction.");
-      }
-
-      const [field, direction] = parts;
-      if (field !== "count" && field !== "syllable") {
-        throw new Error("Invalid sort field.");
-      }
-
-      if (direction !== "asc" && direction !== "desc") {
-        throw new Error("Invalid sort direction.");
-      }
-
-      options.sort.push({ field, direction });
-      index += 1;
-      continue;
-    }
-
-    throw new Error(`Unknown flag: ${value}`);
+function parseLimit(value: string): number {
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < 1) {
+    throw new InvalidArgumentError("limit must be a positive integer");
   }
 
-  return options;
+  return parsed;
+}
+
+function parseSort(value: string): SortSpec {
+  const parts = value.split(":");
+  if (parts.length !== 2) {
+    throw new InvalidArgumentError("sort must use field:direction");
+  }
+
+  const [field, direction] = parts;
+  if (field !== "count" && field !== "syllable") {
+    throw new InvalidArgumentError("sort field must be count or syllable");
+  }
+
+  if (direction !== "asc" && direction !== "desc") {
+    throw new InvalidArgumentError("sort direction must be asc or desc");
+  }
+
+  return { field, direction };
+}
+
+export function createCliCommand(output?: CommandOutput): Command {
+  const command = new Command()
+    .name("syllables-cli")
+    .argument("[inputPath]")
+    .addOption(
+      new Option("-f, --format <format>", "output format")
+        .choices(["csv", "json"])
+        .default("csv"),
+    )
+    .option("-H, --header", "include CSV header row")
+    .option("-o, --output <path>", "write output to a file")
+    .option(
+      "-l, --limit <number>",
+      "maximum number of rows to emit",
+      parseLimit,
+      100,
+    )
+    .option(
+      "-s, --sort <field:direction>",
+      "sort output by count or syllable in asc or desc order",
+      (value: string, previous: SortSpec[] = []) => [
+        ...previous,
+        parseSort(value),
+      ],
+      [],
+    )
+    .showHelpAfterError()
+    .exitOverride();
+
+  if (output) {
+    command.configureOutput({
+      writeOut: (content) => output.stdout.write(content),
+      writeErr: (content) => output.stderr.write(content),
+    });
+  }
+
+  return command;
+}
+
+export function parseCliArgs(
+  argv: string[],
+  output?: CommandOutput,
+): CliOptions {
+  const command = createCliCommand(output);
+  command.parse(argv, { from: "user" });
+
+  const options = command.opts<CommandOptions>();
+  const inputPath = command.processedArgs[0] as string | undefined;
+
+  return {
+    inputPath,
+    outputPath: options.output,
+    format: options.format ?? "csv",
+    header: options.header ?? false,
+    limit: options.limit ?? 100,
+    sort: options.sort ?? [],
+  };
 }

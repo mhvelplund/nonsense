@@ -23,11 +23,12 @@ cat input.txt | syllables-cli
 syllables-cli input.txt --format json --output result.json
 ```
 
-### Project-local install
+### Run from this repository without installing into the workspace
 
 ```bash
-npm install ./apps/syllables-cli/dist
-npx --no-install syllables-cli input.txt
+node ./apps/syllables-cli/dist/main.js input.txt
+cat input.txt | node ./apps/syllables-cli/dist/main.js
+node ./apps/syllables-cli/dist/main.js input.txt --format json --output result.json
 ```
 
 Default behavior:

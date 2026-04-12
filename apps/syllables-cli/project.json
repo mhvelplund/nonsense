@@ -37,7 +37,7 @@
     },
     "add-shebang": {
       "dependsOn": ["build"],
-      "cache": true,
+      "cache": false,
       "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/apps/syllables-cli/dist/main.js"],
       "options": {

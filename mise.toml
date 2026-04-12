@@ -3,3 +3,6 @@ node = "lts"
 "npm:nx" = "latest"
 pnpm = "latest"
 pre-commit = "latest"
+
+[shell_alias]
+"syllables-cli" = "node ./apps/syllables-cli/dist/main.js"

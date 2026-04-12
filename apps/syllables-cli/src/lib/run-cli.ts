@@ -6,7 +6,7 @@ import {
   rankSyllableCounts,
 } from "@nonsense/syllables-core";
 
-import { parseCliArgs } from "./parse-cli-args";
+import type { CliOptions } from "./parse-cli-args";
 import { resolveInputRequest } from "./read-input";
 import { serializeCsv } from "./serialize-csv";
 import { serializeJson } from "./serialize-json";
@@ -20,8 +20,10 @@ export interface RunCliDeps {
   writeFile?: typeof fs.writeFile;
 }
 
-export async function runCli(argv: string[], deps: RunCliDeps): Promise<void> {
-  const options = parseCliArgs(argv);
+export async function runCli(
+  options: CliOptions,
+  deps: RunCliDeps,
+): Promise<void> {
   const input = resolveInputRequest({
     inputPath: options.inputPath,
     stdinIsTty: deps.stdinIsTty,

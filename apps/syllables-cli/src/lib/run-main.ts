@@ -1,3 +1,6 @@
+import { CommanderError } from "commander";
+
+import { parseCliArgs } from "./parse-cli-args";
 import { runCli, type RunCliDeps } from "./run-cli";
 
 async function readStdin(stream: NodeJS.ReadableStream): Promise<string> {
@@ -22,11 +25,18 @@ export async function runMain(
     setExitCode?: (code: number) => void;
   },
 ) {
+  const setExitCode =
+    input.setExitCode ?? ((code: number) => (process.exitCode = code));
+
   try {
     const stdinIsTty = input.stdin.isTTY === true;
+    const options = parseCliArgs(argv, {
+      stdout: input.stdout,
+      stderr: input.stderr,
+    });
     const stdinText = stdinIsTty ? "" : await readStdin(input.stdin);
 
-    await (input.runCliImpl ?? runCli)(argv, {
+    await (input.runCliImpl ?? runCli)(options, {
       stdinIsTty,
       stdinText,
       stdout: input.stdout,
@@ -34,9 +44,16 @@ export async function runMain(
       writeFile: input.writeFile,
     });
   } catch (error) {
+    if (error instanceof CommanderError) {
+      if (error.exitCode !== 0) {
+        setExitCode(error.exitCode);
+      }
+      return;
+    }
+
     input.stderr.write(
       (error instanceof Error ? error.message : String(error)) + "\n",
     );
-    (input.setExitCode ?? ((code) => (process.exitCode = code)))(1);
+    setExitCode(1);
   }
 }
