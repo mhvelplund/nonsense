@@ -1,0 +1,9 @@
+{
+  "name": "synthetic-language-core",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/synthetic-language-core/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project synthetic-language-core --web",
+  "targets": {}
+}
