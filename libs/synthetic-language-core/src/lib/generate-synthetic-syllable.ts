@@ -12,6 +12,10 @@ export function isVowel(ch: string): boolean {
   return VOWELS.includes(ch);
 }
 
+export function letterPoolForChar(ch: string): readonly string[] {
+  return isVowel(ch) ? VOWELS : CONSONANTS;
+}
+
 export function generateSyntheticSyllable(
   source: string,
   rng: Rng = Math.random,
@@ -19,7 +23,7 @@ export function generateSyntheticSyllable(
   return source
     .split("")
     .map((ch) => {
-      const pool = isVowel(ch) ? VOWELS : CONSONANTS;
+      const pool = letterPoolForChar(ch);
       return pool[Math.floor(rng() * pool.length)];
     })
     .join("");

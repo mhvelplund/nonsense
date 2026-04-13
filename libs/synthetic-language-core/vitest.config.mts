@@ -3,6 +3,9 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig(() => ({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/libs/synthetic-language-core',
+  resolve: {
+    conditions: ['nx-syllables'],
+  },
   test: {
     name: 'synthetic-language-core',
     watch: false,

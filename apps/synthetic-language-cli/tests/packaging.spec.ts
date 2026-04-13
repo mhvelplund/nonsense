@@ -4,18 +4,18 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 // Tests intentionally exercise the built install artifact, not the source.
-// Run `nx run syllable-map-cli:prune` before running this spec in isolation.
+// Run `nx run synthetic-language-cli:prune` before running this spec in isolation.
 const distDir = resolve(__dirname, "../dist");
 const pkgPath = resolve(distDir, "package.json");
 const entrypointPath = resolve(distDir, "main.js");
 
-describe("syllable-map-cli dist/package.json", () => {
+describe("synthetic-language-cli dist/package.json", () => {
   it("has a bin entry pointing to ./main.js", () => {
     const pkg = JSON.parse(readFileSync(pkgPath, "utf-8")) as Record<
       string,
       unknown
     >;
-    expect(pkg["bin"]).toEqual({ "syllable-map-cli": "./main.js" });
+    expect(pkg["bin"]).toEqual({ "synthetic-language-cli": "./main.js" });
   });
 
   it("is not marked private", () => {
@@ -27,18 +27,18 @@ describe("syllable-map-cli dist/package.json", () => {
   });
 });
 
-describe("syllable-map-cli dist/main.js", () => {
+describe("synthetic-language-cli dist/main.js", () => {
   it("starts with a #!/usr/bin/env node shebang", () => {
     const content = readFileSync(entrypointPath, "utf-8");
     expect(content.startsWith("#!/usr/bin/env node")).toBe(true);
   });
 });
 
-describe("syllable-map-cli dist non-entrypoint JS files", () => {
+describe("synthetic-language-cli dist non-entrypoint JS files", () => {
   it("do NOT carry the shebang", () => {
     const nonEntrypoints = [
-      resolve(distDir, "apps/syllable-map-cli/src/lib/run-cli.js"),
-      resolve(distDir, "apps/syllable-map-cli/src/lib/run-main.js"),
+      resolve(distDir, "apps/synthetic-language-cli/src/lib/run-cli.js"),
+      resolve(distDir, "apps/synthetic-language-cli/src/lib/run-main.js"),
       resolve(distDir, "libs/synthetic-language-core/src/index.js"),
     ];
     for (const filePath of nonEntrypoints) {
@@ -57,11 +57,13 @@ describe("README local package usage", () => {
     const readme = readFileSync(readmePath, "utf-8");
 
     expect(readme).toContain(
-      "node ./apps/syllable-map-cli/dist/main.js ranked.csv",
+      "node ./apps/synthetic-language-cli/dist/main.js --map map.csv --direction to-synthetic input.txt",
     );
-    expect(readme).not.toContain("npm install ./apps/syllable-map-cli/dist");
     expect(readme).not.toContain(
-      "npx --yes --package ./apps/syllable-map-cli/dist syllable-map-cli",
+      "npm install ./apps/synthetic-language-cli/dist",
+    );
+    expect(readme).not.toContain(
+      "npx --yes --package ./apps/synthetic-language-cli/dist synthetic-language-cli",
     );
   });
 });

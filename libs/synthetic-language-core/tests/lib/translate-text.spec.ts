@@ -47,6 +47,30 @@ describe("translateText", () => {
   });
 
   describe("from-synthetic direction", () => {
+    it("does not require a syllable extractor to translate synthetic words back to source", () => {
+      const result = translateText("zelvo", mapping, {
+        direction: "from-synthetic",
+        extractSyllables: () => {
+          throw new Error("should not call extractor for synthetic input");
+        },
+      });
+      expect(result).toBe("hello");
+    });
+
+    it("prefers a full mapped segmentation over a greedy longest-prefix match", () => {
+      const overlappingMapping: MappingRecord[] = [
+        { source: "x", synthetic: "ab" },
+        { source: "y", synthetic: "aba" },
+        { source: "z", synthetic: "ac" },
+      ];
+
+      const result = translateText("abac", overlappingMapping, {
+        direction: "from-synthetic",
+      });
+
+      expect(result).toBe("xz");
+    });
+
     it("translates a single word from synthetic to source", () => {
       const syntheticExtract = makeExtractor({ zelvo: ["zel", "vo"] });
       const result = translateText("zelvo", mapping, {
@@ -192,6 +216,23 @@ describe("translateText", () => {
         extractSyllables: contractionExtract,
       });
       expect(result).toBe("zel'vo");
+    });
+  });
+
+  describe("unicode word handling", () => {
+    it("translates Danish words containing non-ASCII letters", () => {
+      const danishMapping: MappingRecord[] = [
+        { source: "blå", synthetic: "sne" },
+      ];
+      const danishExtract = makeExtractor({ blå: ["blå"] });
+
+      const result = translateText("blå", danishMapping, {
+        direction: "to-synthetic",
+        language: "da",
+        extractSyllables: danishExtract,
+      });
+
+      expect(result).toBe("sne");
     });
   });
 });

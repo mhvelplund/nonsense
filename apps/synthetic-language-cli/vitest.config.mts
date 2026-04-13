@@ -2,12 +2,12 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig(() => ({
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/apps/syllable-map-cli',
+  cacheDir: '../../node_modules/.vite/apps/synthetic-language-cli',
   resolve: {
     conditions: ['nx-syllables'],
   },
   test: {
-    name: 'syllable-map-cli',
+    name: 'synthetic-language-cli',
     watch: false,
     globals: true,
     environment: 'node',

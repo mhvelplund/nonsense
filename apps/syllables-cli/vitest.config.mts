@@ -3,6 +3,9 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig(() => ({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/syllables-cli',
+  resolve: {
+    conditions: ['nx-syllables'],
+  },
   test: {
     name: 'syllables-cli',
     watch: false,

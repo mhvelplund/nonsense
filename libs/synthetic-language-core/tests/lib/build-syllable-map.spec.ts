@@ -117,14 +117,45 @@ describe("buildSyllableMap", () => {
 
   it("throws when all unique combinations for a shape are exhausted", () => {
     // Single-vowel shape has exactly 6 combinations (VOWELS: a,e,i,o,u,y).
-    // alwaysZero always maps any vowel → "a", so after the first entry claims "a"
-    // the second entry can never obtain a unique synthetic and must throw.
+    // Once all six vowels are claimed, another single-vowel syllable must fail.
     const entries = [
       { syllable: "a", count: 1 },
-      { syllable: "i", count: 1 }, // same single-vowel shape; alwaysZero → "a" → exhausted
+      { syllable: "e", count: 1 },
+      { syllable: "i", count: 1 },
+      { syllable: "o", count: 1 },
+      { syllable: "u", count: 1 },
+      { syllable: "y", count: 1 },
+      { syllable: "a", count: 1 },
     ];
     expect(() => buildSyllableMap(entries, alwaysZero)).toThrow(
-      /Failed to find a unique synthetic syllable for "i" after 6 attempts/,
+      /No unique synthetic syllable remaining for "a"/,
     );
   });
+
+  it("finds an available combination even when early random draws keep colliding", () => {
+    const seqRng = makeSeqRng([0, 0.2, 0.4, 0.6, 0.8, 0, 0, 0, 0, 0, 0, 0.99]);
+    const entries = [
+      { syllable: "a", count: 1 },
+      { syllable: "e", count: 1 },
+      { syllable: "i", count: 1 },
+      { syllable: "o", count: 1 },
+      { syllable: "u", count: 1 },
+      { syllable: "y", count: 1 },
+    ];
+
+    const result = buildSyllableMap(entries, seqRng);
+
+    expect(new Set(result.map((record) => record.synthetic)).size).toBe(6);
+  });
+
+  it("builds long syllables without enumerating the full candidate space", () => {
+    const result = buildSyllableMap(
+      [{ syllable: "bcdfgh", count: 1 }],
+      alwaysZero,
+    );
+    expect(result[0]).toMatchObject({
+      source: "bcdfgh",
+      synthetic: expect.stringMatching(/^[^aeiouy]{6}$/),
+    });
+  }, 1000);
 });

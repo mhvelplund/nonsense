@@ -1,0 +1,11 @@
+{
+  "name": "synthetic-language-cli",
+  "version": "1.0.0",
+  "bin": {
+    "synthetic-language-cli": "./main.js"
+  },
+  "dependencies": {
+    "@nonsense/synthetic-language-core": "workspace:*",
+    "commander": "^14.0.3"
+  }
+}
