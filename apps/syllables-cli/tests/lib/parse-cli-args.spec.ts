@@ -9,6 +9,7 @@ describe("parseCliArgs", () => {
       header: false,
       limit: 100,
       sort: [],
+      language: "en-us",
     });
   });
 
@@ -29,6 +30,7 @@ describe("parseCliArgs", () => {
       header: true,
       limit: 100,
       sort: [],
+      language: "en-us",
     });
   });
 
@@ -50,6 +52,7 @@ describe("parseCliArgs", () => {
         { field: "count", direction: "desc" },
         { field: "syllable", direction: "asc" },
       ],
+      language: "en-us",
     });
   });
 
@@ -79,6 +82,27 @@ describe("parseCliArgs", () => {
         { field: "count", direction: "asc" },
         { field: "syllable", direction: "desc" },
       ],
+      language: "en-us",
+    });
+  });
+
+  it("accepts --language da long form", () => {
+    expect(parseCliArgs(["--language", "da"])).toEqual({
+      format: "csv",
+      header: false,
+      limit: 100,
+      sort: [],
+      language: "da",
+    });
+  });
+
+  it("accepts -L short alias for language", () => {
+    expect(parseCliArgs(["-L", "en-us"])).toEqual({
+      format: "csv",
+      header: false,
+      limit: 100,
+      sort: [],
+      language: "en-us",
     });
   });
 });

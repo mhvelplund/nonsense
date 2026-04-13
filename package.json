@@ -21,6 +21,7 @@
     "vitest": "^4.1.4"
   },
   "dependencies": {
+    "hyphenation.da": "^0.2.1",
     "hyphenation.en-us": "^0.2.1",
     "hypher": "^0.2.5"
   }

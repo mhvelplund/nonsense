@@ -9,7 +9,7 @@ pnpm install
 ## Package the CLI
 
 ```bash
-pnpm exec nx run syllables-cli:prune
+nx run syllables-cli:prune
 ```
 
 ## Install and run

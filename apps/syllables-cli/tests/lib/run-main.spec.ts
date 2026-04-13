@@ -28,6 +28,7 @@ describe("runMain", () => {
         header: false,
         limit: 100,
         sort: [],
+        language: "en-us",
       },
       {
         stdinIsTty: true,
@@ -77,6 +78,7 @@ describe("runMain", () => {
           { field: "count", direction: "asc" },
           { field: "syllable", direction: "desc" },
         ],
+        language: "en-us",
       },
       {
         stdinIsTty: true,
@@ -140,6 +142,7 @@ describe("runMain", () => {
         header: true,
         limit: 100,
         sort: [],
+        language: "en-us",
       },
       {
         stdinIsTty: false,
@@ -171,6 +174,7 @@ describe("runMain", () => {
         header: false,
         limit: 100,
         sort: [],
+        language: "en-us",
       },
       {
         stdinIsTty: false,

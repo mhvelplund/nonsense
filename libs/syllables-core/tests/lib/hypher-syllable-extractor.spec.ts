@@ -10,16 +10,22 @@ describe("createHypherSyllableExtractor", () => {
     expect(extract("common")).toEqual(["com", "mon"]);
   });
 
+  it("splits words using the Danish hyphenation patterns", () => {
+    const extract = createHypherSyllableExtractor("da");
+
+    expect(extract("arbejde")).toEqual(["ar", "bej", "de"]);
+  });
+
   it("rethrows dependency initialization failures", () => {
     expect(() =>
-      createHypherSyllableExtractor(() => {
+      createHypherSyllableExtractor("en-us", () => {
         throw new Error("hypher init failed");
       }),
     ).toThrow("hypher init failed");
   });
 
   it("rethrows dependency failures so callers can surface them", () => {
-    const extract = createHypherSyllableExtractor(() => ({
+    const extract = createHypherSyllableExtractor("en-us", () => ({
       hyphenate() {
         throw new Error("hypher failed");
       },

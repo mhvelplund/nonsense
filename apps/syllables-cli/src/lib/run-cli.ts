@@ -44,7 +44,10 @@ export async function runCli(
 
   let ranked;
   try {
-    const counts = analyzeSyllableCounts(text, createHypherSyllableExtractor());
+    const counts = analyzeSyllableCounts(
+      text,
+      createHypherSyllableExtractor(options.language),
+    );
     ranked = rankSyllableCounts(counts, {
       limit: options.limit,
       sort: options.sort,

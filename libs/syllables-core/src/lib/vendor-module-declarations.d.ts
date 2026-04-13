@@ -9,3 +9,8 @@ declare module "hyphenation.en-us" {
   const patterns: unknown;
   export default patterns;
 }
+
+declare module "hyphenation.da" {
+  const patterns: unknown;
+  export default patterns;
+}

@@ -29,6 +29,7 @@ function createOptions(overrides: Partial<CliOptions> = {}): CliOptions {
     header: false,
     limit: 100,
     sort: [],
+    language: "en-us",
     ...overrides,
   };
 }

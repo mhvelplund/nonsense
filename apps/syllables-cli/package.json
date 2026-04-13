@@ -1,6 +1,6 @@
 {
   "name": "syllables-cli",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "bin": {
     "syllables-cli": "./main.js"
   },

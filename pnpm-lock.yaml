@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      hyphenation.da:
+        specifier: ^0.2.1
+        version: 0.2.1
       hyphenation.en-us:
         specifier: ^0.2.1
         version: 0.2.1
@@ -2308,6 +2311,9 @@ packages:
 
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
+
+  hyphenation.da@0.2.1:
+    resolution: {integrity: sha512-XZOWtj1U1F6qXgoJaEMCwHUdv0d1goPnGVGVe7XckyoO+ijqLd6aprc3Amzdoco1cpAsDkjHmNNRVKxVmDMstQ==}
 
   hyphenation.en-us@0.2.1:
     resolution: {integrity: sha512-ItXYgvIpfN8rfXl/GTBQC7DsSb5PPsKh9gGzViK/iWzCS5mvjDebFJ6xCcIYo8dal+nSp2rUzvTT7BosrKlL8A==}
@@ -5728,6 +5734,10 @@ snapshots:
       function-bind: 1.1.2
 
   html-escaper@2.0.2: {}
+
+  hyphenation.da@0.2.1:
+    dependencies:
+      hypher: 0.2.5
 
   hyphenation.en-us@0.2.1:
     dependencies:

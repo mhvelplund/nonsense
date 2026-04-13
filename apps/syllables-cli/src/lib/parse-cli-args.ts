@@ -1,6 +1,6 @@
 import { Command, InvalidArgumentError, Option } from "commander";
 
-import type { SortSpec } from "@nonsense/syllables-core";
+import type { SortSpec, SupportedLanguage } from "@nonsense/syllables-core";
 
 export interface CliOptions {
   inputPath?: string;
@@ -9,6 +9,7 @@ export interface CliOptions {
   header: boolean;
   limit: number;
   sort: SortSpec[];
+  language: SupportedLanguage;
 }
 
 interface CommandOptions {
@@ -17,6 +18,7 @@ interface CommandOptions {
   output?: string;
   limit?: number;
   sort?: SortSpec[];
+  language?: SupportedLanguage;
 }
 
 interface CommandOutput {
@@ -77,6 +79,11 @@ export function createCliCommand(output?: CommandOutput): Command {
       ],
       [],
     )
+    .addOption(
+      new Option("-L, --language <language>", "hyphenation language")
+        .choices(["en-us", "da"])
+        .default("en-us"),
+    )
     .showHelpAfterError()
     .exitOverride();
 
@@ -107,5 +114,6 @@ export function parseCliArgs(
     header: options.header ?? false,
     limit: options.limit ?? 100,
     sort: options.sort ?? [],
+    language: options.language ?? "en-us",
   };
 }
