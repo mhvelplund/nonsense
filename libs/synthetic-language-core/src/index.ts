@@ -1,1 +1,2 @@
-export * from "./lib/synthetic-language";
+export * from "./lib/build-syllable-map";
+export * from "./lib/translate-text";
