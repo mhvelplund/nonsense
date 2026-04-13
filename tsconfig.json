@@ -8,6 +8,9 @@
     },
     {
       "path": "./libs/syllables-core"
+    },
+    {
+      "path": "./libs/synthetic-language-core"
     }
   ]
 }

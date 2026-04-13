@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { buildSyllableMap } from "../../src/lib/build-syllable-map";
-import type { Rng } from "../../src/lib/generate-synthetic-syllable";
+import {
+  VOWEL_POOL_SIZE,
+  type Rng,
+} from "../../src/lib/generate-synthetic-syllable";
 
 function makeSeqRng(values: number[]): Rng {
   let i = 0;
@@ -41,7 +44,7 @@ describe("buildSyllableMap", () => {
     // Provide a seq: first 2 calls generate "ab" for first entry,
     // next 2 calls generate "ab" for second (collision), then switch to produce "eb"
     // VOWELS[0]='a', VOWELS[1]='e'; CONSONANTS[0]='b'
-    const seqRng = makeSeqRng([0, 0, 0, 0, 1 / 6 + 0.01, 0]);
+    const seqRng = makeSeqRng([0, 0, 0, 0, 1 / VOWEL_POOL_SIZE + 0.01, 0]);
     const entries = [
       { syllable: "ab", count: 5 },
       { syllable: "it", count: 3 },
@@ -75,7 +78,7 @@ describe("buildSyllableMap", () => {
     }
   });
 
-  it("order from the input table does not affect synthetic assignment beyond source identity", () => {
+  it("count values do not influence the synthetic assignment", () => {
     // Same syllables in different order should still produce same source→synthetic mapping
     const entriesA = [
       { syllable: "ab", count: 100 },
@@ -99,7 +102,7 @@ describe("buildSyllableMap", () => {
   it("retries until a unique synthetic is found", () => {
     // "ab" and "it" have the same vowel+consonant shape, first attempt
     // produces the same synthetic — second entry must retry
-    const seqRng = makeSeqRng([0, 0, 0, 0, 1 / 6 + 0.01, 0]);
+    const seqRng = makeSeqRng([0, 0, 0, 0, 1 / VOWEL_POOL_SIZE + 0.01, 0]);
     const entries = [
       { syllable: "ab", count: 5 },
       { syllable: "it", count: 3 },
@@ -121,7 +124,7 @@ describe("buildSyllableMap", () => {
       { syllable: "i", count: 1 }, // same single-vowel shape; alwaysZero → "a" → exhausted
     ];
     expect(() => buildSyllableMap(entries, alwaysZero)).toThrow(
-      /Exhausted all 6 unique synthetic combinations for syllable shape "i"/,
+      /Failed to find a unique synthetic syllable for "i" after 6 attempts/,
     );
   });
 });

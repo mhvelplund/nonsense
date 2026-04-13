@@ -10,6 +10,11 @@
       "vitest"
     ]
   },
+  "references": [
+    {
+      "path": "../syllables-core/tsconfig.lib.json"
+    }
+  ],
   "include": [
     "vite.config.ts",
     "vite.config.mts",
