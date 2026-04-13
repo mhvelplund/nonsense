@@ -1,0 +1,97 @@
+{
+  "name": "syllable-map-cli",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/syllable-map-cli/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "apps/syllable-map-cli/dist",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/syllable-map-cli/src/main.ts",
+        "tsConfig": "apps/syllable-map-cli/tsconfig.app.json",
+        "assets": ["apps/syllable-map-cli/src/assets"],
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "add-shebang": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/apps/syllable-map-cli/dist/main.js"],
+      "options": {
+        "command": "node -e \"const fs=require('fs'),f='apps/syllable-map-cli/dist/main.js',c=fs.readFileSync(f,'utf-8');if(!c.startsWith('#!/usr/bin/env node\\n'))fs.writeFileSync(f,'#!/usr/bin/env node\\n'+c);\""
+      }
+    },
+    "prune-lockfile": {
+      "dependsOn": ["add-shebang"],
+      "cache": true,
+      "executor": "@nx/js:prune-lockfile",
+      "outputs": [
+        "{workspaceRoot}/apps/syllable-map-cli/dist/package.json",
+        "{workspaceRoot}/apps/syllable-map-cli/dist/pnpm-lock.yaml"
+      ],
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "copy-workspace-modules": {
+      "dependsOn": ["build"],
+      "cache": true,
+      "outputs": [
+        "{workspaceRoot}/apps/syllable-map-cli/dist/workspace_modules"
+      ],
+      "executor": "@nx/js:copy-workspace-modules",
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "prune": {
+      "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
+      "executor": "nx:noop"
+    },
+    "test": {
+      "dependsOn": ["prune-lockfile"]
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "syllable-map-cli:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "syllable-map-cli:build:development"
+        },
+        "production": {
+          "buildTarget": "syllable-map-cli:build:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}

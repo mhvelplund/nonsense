@@ -11,6 +11,9 @@
     },
     {
       "path": "./libs/synthetic-language-core"
+    },
+    {
+      "path": "./apps/syllable-map-cli"
     }
   ]
 }
