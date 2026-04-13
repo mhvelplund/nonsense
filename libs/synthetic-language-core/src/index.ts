@@ -1,4 +1,5 @@
 export * from "./lib/build-syllable-map";
+export * from "./lib/generate-synthetic-syllable";
 export * from "./lib/map-records";
 export * from "./lib/parse-map-csv";
 export * from "./lib/parse-map-json";
