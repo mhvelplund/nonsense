@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { serializeCsv } from "./serialize-csv";
+import { serializeCsv } from "../../src/lib/serialize-csv";
 
 describe("serializeCsv", () => {
   it("defaults to semicolon-separated rows with quoted syllables", () => {

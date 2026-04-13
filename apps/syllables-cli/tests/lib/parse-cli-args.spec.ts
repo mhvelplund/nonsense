@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { parseCliArgs } from "./parse-cli-args";
+import { parseCliArgs } from "../../src/lib/parse-cli-args";
 
 describe("parseCliArgs", () => {
   it("uses csv defaults with no header and a limit of 100", () => {

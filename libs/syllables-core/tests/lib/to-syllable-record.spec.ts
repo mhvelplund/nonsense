@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { toSyllableRecord } from "./to-syllable-record";
+import { toSyllableRecord } from "../../src/lib/to-syllable-record";
 
 describe("toSyllableRecord", () => {
   it("projects ranked entries back into a record", () => {

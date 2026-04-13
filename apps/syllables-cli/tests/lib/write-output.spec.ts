@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { writeOutput } from "./write-output";
+import { writeOutput } from "../../src/lib/write-output";
 
 describe("writeOutput", () => {
   it("writes to stdout when no output path is provided", async () => {

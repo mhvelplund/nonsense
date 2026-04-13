@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { createHypherSyllableExtractor } from "./hypher-syllable-extractor";
+import { createHypherSyllableExtractor } from "../../src/lib/hypher-syllable-extractor";
 
 describe("createHypherSyllableExtractor", () => {
   it("splits words using the English hyphenation patterns", () => {

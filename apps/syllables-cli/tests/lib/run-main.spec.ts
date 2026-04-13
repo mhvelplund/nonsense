@@ -2,7 +2,7 @@ import { Readable } from "node:stream";
 
 import { describe, expect, it, vi } from "vitest";
 
-import { runMain } from "./run-main";
+import { runMain } from "../../src/lib/run-main";
 
 describe("runMain", () => {
   it("reads stdin lazily when stdin is a tty", async () => {

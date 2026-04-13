@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { resolveInputRequest } from "./read-input";
+import { resolveInputRequest } from "../../src/lib/read-input";
 
 describe("resolveInputRequest", () => {
   it("chooses a file path when provided and stdin is a tty", () => {

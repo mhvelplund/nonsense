@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { analyzeSyllableCounts } from "./analyze-syllable-counts";
-import type { SyllableExtractor } from "./types";
+import { analyzeSyllableCounts } from "../../src/lib/analyze-syllable-counts";
+import type { SyllableExtractor } from "../../src/lib/types";
 
 const extractor: SyllableExtractor = (word) => {
   if (word === "syllable") return ["syl", "la", "ble"];
@@ -47,19 +47,19 @@ describe("analyzeSyllableCounts", () => {
     const extractSyllables = vi.fn((word: string) => [word]);
     const createExtractor = vi.fn(() => extractSyllables);
 
-    vi.doMock("./hypher-syllable-extractor", () => ({
+    vi.doMock("../../src/lib/hypher-syllable-extractor", () => ({
       createHypherSyllableExtractor: createExtractor,
     }));
 
     const { analyzeSyllableCounts: analyzeWithMockedExtractor } =
-      await import("./analyze-syllable-counts");
+      await import("../../src/lib/analyze-syllable-counts.js");
 
     analyzeWithMockedExtractor("alpha");
     analyzeWithMockedExtractor("beta");
 
     expect(createExtractor).toHaveBeenCalledTimes(1);
 
-    vi.doUnmock("./hypher-syllable-extractor");
+    vi.doUnmock("../../src/lib/hypher-syllable-extractor");
   });
 
   it("ignores words whose extractor returns no syllables", () => {

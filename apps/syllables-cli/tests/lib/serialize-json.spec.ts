@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { serializeJson } from "./serialize-json";
+import { serializeJson } from "../../src/lib/serialize-json";
 
 describe("serializeJson", () => {
   it("serializes ranked entries as a JSON array", () => {

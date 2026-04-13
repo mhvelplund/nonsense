@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { rankSyllableCounts } from "./rank-syllable-counts";
+import { rankSyllableCounts } from "../../src/lib/rank-syllable-counts";
 
 describe("rankSyllableCounts", () => {
   it("selects membership by count desc then syllable asc before applying output sort", () => {

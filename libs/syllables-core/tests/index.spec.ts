@@ -1,5 +1,5 @@
 import { expect } from "vitest";
-import * as syllablesCore from "./index.js";
+import * as syllablesCore from "../src/index.js";
 
 describe("syllables-core", () => {
   it("exports the public API", () => {

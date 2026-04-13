@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import type { CliOptions } from "./parse-cli-args";
+import type { CliOptions } from "../../src/lib/parse-cli-args";
 
 const coreMocks = vi.hoisted(() => ({
   analyzeSyllableCounts: vi.fn(),
@@ -21,7 +21,7 @@ vi.mock("@nonsense/syllables-core", async () => {
   };
 });
 
-import { runCli } from "./run-cli";
+import { runCli } from "../../src/lib/run-cli";
 
 function createOptions(overrides: Partial<CliOptions> = {}): CliOptions {
   return {
