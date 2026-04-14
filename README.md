@@ -1,102 +1,51 @@
-# nonsense
+# Nonsense
+<!-- cspell: disable -->
+Nonsense is a package for making synthetic languages and translating text to and from those languages. It's not proper
+languages, simple syllable search and replace.
 
 ## Setup
 
+Install [`mise-en-place`](https://mise.jdx.dev/) and then run these commands:
+
 ```bash
+mise trust
+mise install
 pnpm install
+nx run-many -t prune
+for d in apps/*; do npm install -g "$d/dist"; done
 ```
 
-## Package the CLIs
+This installs:
 
-```bash
-nx run syllables-cli:prune
-nx run syllable-map-cli:prune
-nx run synthetic-language-cli:prune
+* [`syllables-cli`](./apps/syllables-cli/): Counts syllable frequencies in text input and outputs a ranked list.
+* [`syllable-map-cli`](./apps/syllable-map-cli/): Builds a syllable substitution map from a ranked syllable list (e.g.
+  the output of `syllables-cli`).
+* [`synthetic-language-cli`](./apps/synthetic-language-cli/): Translates text to or from a synthetic language using a
+  syllable substitution map (e.g. the output of `syllable-map-cli`).
+
+## Usage
+
+This examples shows how to generate a language and translate a text to it.
+
+```shell
+unzip examples/english.zip -d examples/
+syllables-cli -l 50000 < examples/english.txt | syllable-map-cli > examples/zorkish.language-map
+synthetic-language-cli --map examples/zorkish.language-map --direction to-synthetic < examples/the-verdict.txt > examples/zorked.txt
+synthetic-language-cli --map examples/zorkish.language-map --direction from-synthetic < examples/zorked.txt > examples/unzorked.txt
 ```
 
-## Install and run
+As a casual `diff examples/the-verdict.txt examples/unzorked.txt` will show, it's not perfect:
 
-### syllables-cli
-
-Counts syllable frequencies in text input and outputs a ranked list.
-
-#### Global install (recommended)
-
-```bash
-npm install -g ./apps/syllables-cli/dist
-syllables-cli input.txt
-cat input.txt | syllables-cli
-syllables-cli input.txt --format json --output result.json
+```diff
+163c163
+< And, in answer to a question I put half-mechanically--"Begin again?" he flashed out. "When the one thing that brings me anywhere near him is that I knew enough to leave off?"
+---
+> And, in answer to a question I put half-fopticocally--"Levoh again?" he ntithiv out. "When the one thing that kginvx me anywhere near him is that I knew ijouvc to leave off?"
+165c165
+< He stood up and laid his hand on my shoulder with a laugh. "Only the irony of it is that I _am_ still painting--since Grindle's doing it for me! The Strouds stand alone, and happen once--but there's no exterminating our kind of art."
+---
+> He stood up and laid his hand on my shoulder with a laugh. "Only the osoqu of it is that I _am_ still painting--nefra Pfohkni's doing it for me! The Strouds stand alone, and happen uxra--but there's no exterminating our kind of art."
 ```
 
-#### Run from this repository without installing into the workspace
-
-```bash
-node ./apps/syllables-cli/dist/main.js input.txt
-cat input.txt | node ./apps/syllables-cli/dist/main.js
-node ./apps/syllables-cli/dist/main.js input.txt --format json --output result.json
-```
-
-Default behavior:
-
-- format defaults to CSV
-- CSV omits the header row unless `--header` is passed
-- CSV uses semicolons and always quotes the syllable text column
-- `--limit` defaults to `100`
-
-### syllable-map-cli
-
-Builds a syllable substitution map from a ranked syllable list (e.g. the output of `syllables-cli`).
-
-#### Global install (recommended)
-
-```bash
-npm install -g ./apps/syllable-map-cli/dist
-syllable-map-cli ranked.csv
-cat ranked.csv | syllable-map-cli
-syllable-map-cli ranked.csv --format json --output map.json
-syllable-map-cli ranked.json --input-format json --format json --output map.json
-```
-
-#### Run from this repository without installing into the workspace
-
-```bash
-node ./apps/syllable-map-cli/dist/main.js ranked.csv
-cat ranked.csv | node ./apps/syllable-map-cli/dist/main.js
-node ./apps/syllable-map-cli/dist/main.js ranked.csv --format json --output map.json
-```
-
-Default behavior:
-
-- input format defaults to CSV
-- output format defaults to CSV
-- CSV omits the header row unless `--header` / `--input-header` is passed
-
-### synthetic-language-cli
-
-Translates text to or from a synthetic language using a syllable substitution map.
-
-Requires `--map <path>` and `--direction <to-synthetic|from-synthetic>`.
-
-#### Global install (recommended)
-
-```bash
-npm install -g ./apps/synthetic-language-cli/dist
-synthetic-language-cli --map map.csv --direction to-synthetic input.txt
-cat input.txt | synthetic-language-cli --map map.csv --direction to-synthetic
-synthetic-language-cli --map map.json --map-format json --direction from-synthetic input.txt --output result.txt
-```
-
-#### Run from this repository without installing into the workspace
-
-```bash
-node ./apps/synthetic-language-cli/dist/main.js --map map.csv --direction to-synthetic input.txt
-cat input.txt | node ./apps/synthetic-language-cli/dist/main.js --map map.csv --direction to-synthetic
-node ./apps/synthetic-language-cli/dist/main.js --map map.json --map-format json --direction from-synthetic input.txt
-```
-
-Default behavior:
-
-- map format defaults to CSV
-- language defaults to `en-us` (also supports `da`)
-- output goes to stdout unless `--output <path>` is given
+Some random words are mangled, and names are almost always mangled. But as they say, "it's good enough for government
+work".
