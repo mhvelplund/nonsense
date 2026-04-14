@@ -41,8 +41,8 @@ This example shows how to generate a complete synthetic language and translate t
 
 ```shell
 unzip examples/english.zip -d examples/
-node ./apps/syllables-cli/dist/main.js -l 50000 examples/english.txt | \
-  node ./apps/syllable-map-cli/dist/main.js ranked.csv > examples/zorkish.language-map
+node ./apps/syllables-cli/dist/main.js -l 50000 examples/english.txt > examples/ranked.csv
+node ./apps/syllable-map-cli/dist/main.js examples/ranked.csv > examples/zorkish.language-map
 node ./apps/synthetic-language-cli/dist/main.js --map examples/zorkish.language-map --direction to-synthetic examples/the-verdict.txt > examples/zorked.txt
 node ./apps/synthetic-language-cli/dist/main.js --map examples/zorkish.language-map --direction from-synthetic examples/zorked.txt > examples/unzorked.txt
 ```
