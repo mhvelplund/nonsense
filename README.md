@@ -62,3 +62,8 @@ As a casual `diff examples/the-verdict.txt examples/unzorked.txt` will show, it'
 
 Some random words are mangled, and names are almost always mangled. But as they say, "it's good enough for government
 work".
+
+## AI use
+
+The code was largely produced by [Copilot](https://github.com/features/copilot/cli) using GPT-5.4 and the
+[superpowers](https://github.com/obra/superpowers) package.

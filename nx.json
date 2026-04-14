@@ -1,27 +1,28 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "analytics": false,
   "plugins": [
     {
-      "plugin": "@nx/vitest",
       "options": {
-        "testTargetName": "test",
         "ciTargetName": "test-ci",
-        "testMode": "watch"
-      }
+        "testMode": "watch",
+        "testTargetName": "test"
+      },
+      "plugin": "@nx/vitest"
     },
     {
-      "plugin": "@nx/js/typescript",
       "options": {
+        "build": {
+          "buildDepsName": "build-deps",
+          "configName": "tsconfig.lib.json",
+          "targetName": "build",
+          "watchDepsName": "watch-deps"
+        },
         "typecheck": {
           "targetName": "typecheck"
-        },
-        "build": {
-          "targetName": "build",
-          "configName": "tsconfig.lib.json",
-          "buildDepsName": "build-deps",
-          "watchDepsName": "watch-deps"
         }
-      }
+      },
+      "plugin": "@nx/js/typescript"
     }
   ],
   "targetDefaults": {
@@ -39,5 +40,7 @@
       "dependsOn": ["^build"]
     }
   },
-  "analytics": false
+  "tui": {
+    "enabled": false
+  }
 }
