@@ -1,3 +1,9 @@
+## v1.1.4 (2026-04-14)
+
+### Fix
+
+- patch follow-redirects dependency
+
 ## v1.1.3 (2026-04-14)
 
 ### Fix
