@@ -38,7 +38,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Bump versions and create a tag
-        run: cz bump --yes --increment PATCH --check-consistency
+        run: cz bump --changelog --no-verify --yes --check-consistency --annotated-tag
 
       - name: Push bump commit and tag
         run: git push origin HEAD:main --follow-tags

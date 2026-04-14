@@ -1,6 +1,7 @@
 [tools]
 node = "lts"
 "npm:nx" = "latest"
+"pipx:commitizen" = "latest"
 pnpm = "latest"
 pre-commit = "latest"
 
