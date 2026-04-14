@@ -12,10 +12,9 @@ mise trust
 mise install
 pnpm install
 nx run-many -t prune
-for d in apps/*; do npm install -g "$d/dist"; done
 ```
 
-This installs:
+This sets up the monorepo and builds installable CLI artifacts:
 
 * [`syllables-cli`](./apps/syllables-cli/): Counts syllable frequencies in text input and outputs a ranked list.
 * [`syllable-map-cli`](./apps/syllable-map-cli/): Builds a syllable substitution map from a ranked syllable list (e.g.
@@ -25,13 +24,27 @@ This installs:
 
 ## Usage
 
-This examples shows how to generate a language and translate a text to it.
+Run the packaged CLIs directly using Node:
+
+```shell
+# Analyze syllable frequencies
+node ./apps/syllables-cli/dist/main.js input.txt
+
+# Build a syllable substitution map from ranked syllables
+node ./apps/syllable-map-cli/dist/main.js ranked.csv
+
+# Translate text to or from a synthetic language
+node ./apps/synthetic-language-cli/dist/main.js --map map.csv --direction to-synthetic input.txt
+```
+
+This example shows how to generate a complete synthetic language and translate text:
 
 ```shell
 unzip examples/english.zip -d examples/
-syllables-cli -l 50000 < examples/english.txt | syllable-map-cli > examples/zorkish.language-map
-synthetic-language-cli --map examples/zorkish.language-map --direction to-synthetic < examples/the-verdict.txt > examples/zorked.txt
-synthetic-language-cli --map examples/zorkish.language-map --direction from-synthetic < examples/zorked.txt > examples/unzorked.txt
+node ./apps/syllables-cli/dist/main.js -l 50000 examples/english.txt | \
+  node ./apps/syllable-map-cli/dist/main.js ranked.csv > examples/zorkish.language-map
+node ./apps/synthetic-language-cli/dist/main.js --map examples/zorkish.language-map --direction to-synthetic examples/the-verdict.txt > examples/zorked.txt
+node ./apps/synthetic-language-cli/dist/main.js --map examples/zorkish.language-map --direction from-synthetic examples/zorked.txt > examples/unzorked.txt
 ```
 
 As a casual `diff examples/the-verdict.txt examples/unzorked.txt` will show, it's not perfect:
