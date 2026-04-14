@@ -1,4 +1,4 @@
-import type { RankedSyllableEntry } from "@nonsense/syllables-core";
+import type { RankedSyllableEntry } from "@mhvelplund/syllables-core";
 
 function assertRankedEntry(
   value: unknown,

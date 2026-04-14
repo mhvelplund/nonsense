@@ -1,4 +1,4 @@
-import type { RankedSyllableEntry } from "@nonsense/syllables-core";
+import type { RankedSyllableEntry } from "@mhvelplund/syllables-core";
 
 import type { MappingRecord } from "./types";
 import { letterPoolForChar, type Rng } from "./generate-synthetic-syllable";

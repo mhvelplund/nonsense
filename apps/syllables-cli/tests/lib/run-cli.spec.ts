@@ -6,10 +6,10 @@ const coreMocks = vi.hoisted(() => ({
   analyzeSyllableCounts: vi.fn(),
 }));
 
-vi.mock("@nonsense/syllables-core", async () => {
+vi.mock("@mhvelplund/syllables-core", async () => {
   const actual = await vi.importActual<
-    typeof import("@nonsense/syllables-core")
-  >("@nonsense/syllables-core");
+    typeof import("@mhvelplund/syllables-core")
+  >("@mhvelplund/syllables-core");
 
   coreMocks.analyzeSyllableCounts.mockImplementation(
     actual.analyzeSyllableCounts,

@@ -4,7 +4,7 @@ import {
   analyzeSyllableCounts,
   createHypherSyllableExtractor,
   rankSyllableCounts,
-} from "@nonsense/syllables-core";
+} from "@mhvelplund/syllables-core";
 
 import type { CliOptions } from "./parse-cli-args";
 import { resolveInputRequest } from "./read-input";
