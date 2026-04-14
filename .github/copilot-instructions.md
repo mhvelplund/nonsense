@@ -8,6 +8,7 @@
 - Build all CLI artifacts at once with `pnpm exec nx run-many -t prune`.
 - Run all tests for a project with `pnpm exec nx test <project>` (e.g., `syllables-cli`, `syllables-core`).
 - Run one spec file with `cd apps/<project> && pnpm exec vitest run src/lib/<spec>.spec.ts` or `cd libs/<project> && pnpm exec vitest run src/lib/<spec>.spec.ts`.
+- Run a packaging spec with `pnpm exec nx run <project>:prune` first, then `cd apps/<project> && pnpm exec vitest run tests/packaging.spec.ts`.
 - Typecheck with `pnpm exec nx typecheck <project>` (e.g., `syllables-cli`, `synthetic-language-core`).
 - There is no Nx lint target in this repo. The only checked-in lint/format automation is `pre-commit run --all-files`.
 
@@ -18,7 +19,7 @@ This is a pnpm/Nx monorepo with five projects:
 **Libraries:**
 
 - `libs/syllables-core` is the syllable analysis library. `tokenizeWords()` lowercases input and keeps `[a-z]+` tokens, `createHypherSyllableExtractor()` wraps `hypher` with `hyphenation.en-us`, `analyzeSyllableCounts()` aggregates syllable frequencies, and `rankSyllableCounts()` applies the canonical sort/limit behavior exposed through `src/index.ts`.
-- `libs/synthetic-language-core` provides synthetic language mapping and translation. It exports `buildMap()` for creating syllable substitution maps, `parseMapping()` and `serializeMapping()` for CSV/JSON I/O, `translateText()` for applying substitutions, and shared types like `SyllableMapping` and `SyllablePair`.
+- `libs/synthetic-language-core` provides synthetic language mapping and translation. It exports `buildSyllableMap()` for creating syllable substitution maps, `parseMapCsv()`/`parseMapJson()` and `serializeMapCsv()`/`serializeMapJson()` for CSV/JSON I/O, `translateText()` for applying substitutions, and the `MappingRecord` type for syllable pairs.
 
 **CLIs:**
 
