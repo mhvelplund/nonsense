@@ -1,10 +1,13 @@
 {
-  "name": "@nonsense/synthetic-language-core",
+  "name": "@mhvelplund/synthetic-language-core",
   "version": "1.1.0",
-  "private": true,
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "package.json"
+  ],
   "exports": {
     "./package.json": "./package.json",
     ".": {
@@ -14,8 +17,12 @@
       "default": "./dist/index.js"
     }
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": "https://github.com/mhvelplund/nonsense.git",
   "dependencies": {
-    "@nonsense/syllables-core": "workspace:*",
+    "@mhvelplund/syllables-core": "workspace:*",
     "tslib": "^2.3.0"
   }
 }

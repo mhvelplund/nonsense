@@ -10,6 +10,18 @@ const pkgPath = resolve(distDir, "package.json");
 const entrypointPath = resolve(distDir, "main.js");
 
 describe("synthetic-language-cli dist/package.json", () => {
+  it("uses the GitHub Packages scope and registry metadata", () => {
+    const pkg = JSON.parse(readFileSync(pkgPath, "utf-8")) as Record<
+      string,
+      unknown
+    >;
+
+    expect(pkg["name"]).toBe("@mhvelplund/synthetic-language-cli");
+    expect(pkg["publishConfig"]).toEqual({
+      registry: "https://npm.pkg.github.com",
+    });
+  });
+
   it("has a bin entry pointing to ./main.js", () => {
     const pkg = JSON.parse(readFileSync(pkgPath, "utf-8")) as Record<
       string,

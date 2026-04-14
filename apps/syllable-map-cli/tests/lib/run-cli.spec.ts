@@ -6,10 +6,10 @@ const coreMocks = vi.hoisted(() => ({
   buildSyllableMap: vi.fn(),
 }));
 
-vi.mock("@nonsense/synthetic-language-core", async () => {
+vi.mock("@mhvelplund/synthetic-language-core", async () => {
   const actual = await vi.importActual<
-    typeof import("@nonsense/synthetic-language-core")
-  >("@nonsense/synthetic-language-core");
+    typeof import("@mhvelplund/synthetic-language-core")
+  >("@mhvelplund/synthetic-language-core");
 
   coreMocks.buildSyllableMap.mockImplementation(actual.buildSyllableMap);
 

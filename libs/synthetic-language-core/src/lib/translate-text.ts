@@ -1,7 +1,7 @@
 import {
   createHypherSyllableExtractor,
   type SupportedLanguage,
-} from "@nonsense/syllables-core";
+} from "@mhvelplund/syllables-core";
 import type { MappingRecord } from "./types.js";
 
 export type TranslationDirection = "to-synthetic" | "from-synthetic";

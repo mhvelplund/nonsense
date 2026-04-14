@@ -2,7 +2,7 @@ import { Command, Option } from "commander";
 import type {
   SupportedLanguage,
   TranslationDirection,
-} from "@nonsense/synthetic-language-core";
+} from "@mhvelplund/synthetic-language-core";
 
 export type MapFormat = "csv" | "json";
 

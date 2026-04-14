@@ -7,9 +7,11 @@
 - Build installable CLI artifacts with `pnpm exec nx run <cli>:prune` (e.g., `syllables-cli:prune`, `syllable-map-cli:prune`, `synthetic-language-cli:prune`). Use the `prune` target before testing packaged entrypoints or changing README packaging examples.
 - Build all CLI artifacts at once with `pnpm exec nx run-many -t prune`.
 - Run all tests for a project with `pnpm exec nx test <project>` (e.g., `syllables-cli`, `syllables-core`).
+- Run the full CI test command with `pnpm exec nx run-many -t test`.
 - Run one spec file with `cd apps/<project> && pnpm exec vitest run tests/lib/<spec>.spec.ts` or `cd libs/<project> && pnpm exec vitest run tests/lib/<spec>.spec.ts`. For library public-API smoke tests, use `cd libs/<project> && pnpm exec vitest run tests/index.spec.ts`.
 - Run a packaging spec with `pnpm exec nx run <project>:prune` first, then `cd apps/<project> && pnpm exec vitest run tests/packaging.spec.ts`.
 - Typecheck with `pnpm exec nx typecheck <project>` (e.g., `syllables-cli`, `synthetic-language-core`).
+- Prepare CLI dist artifacts for GitHub Packages publishing with `node tools/prepare-cli-publish-packages.mjs` after `pnpm exec nx run-many -t prune`.
 - There is no Nx lint target in this repo. The only checked-in lint/format automation is `pre-commit run --all-files`.
 
 ## High-level architecture
@@ -31,6 +33,7 @@ This is a pnpm/Nx monorepo with five projects:
 
 - All CLI builds are intentionally unbundled CommonJS output. Each `<cli>:build` preserves a workspace-style tree under `apps/<cli>/dist`, `add-shebang` only touches `dist/main.js`, and `prune-lockfile` plus `copy-workspace-modules` make the dist directory installable.
 - Each CLI has a `tests/packaging.spec.ts` that validates the built dist artifact (not the source tree). Packaging specs enforce README examples and verify that only `dist/main.js` carries a shebang. Treat packaging as an integration workflow, not just a unit-tested code path.
+- GitHub Packages publishing uses the `@mhvelplund/*` scope. Libraries publish from their package roots, while CLI release publishing first rewrites the generated `dist/package.json` files with `node tools/prepare-cli-publish-packages.mjs` so registry packages depend on published versions instead of bundled `workspace_modules`.
 
 ## Key conventions
 
@@ -40,3 +43,4 @@ This is a pnpm/Nx monorepo with five projects:
 - Preserve the CLI output contract: CSV is the default format, CSV headers are opt-in via `--header`, CSV rows use `;` and always quote the syllable column (for `syllables-cli`) or both columns (for `syllable-map-cli`), JSON output is pretty-printed with a trailing newline, and `--limit` defaults to `100` (for `syllables-cli`).
 - Keep error handling explicit at the CLI boundary. Helpers throw typed or plain `Error`s; `run-main.ts` in each CLI is the place that translates failures into stderr output and a non-zero exit code.
 - The workspace uses `customConditions: ["nx-syllables"]` in `tsconfig.base.json` for conditional package.json exports. This is a workspace-wide TypeScript configuration requirement.
+- The release workflows are `.github/workflows/pr-tests.yml`, `version-on-main.yml`, `release-on-tag.yml`, and `publish-on-release.yml`. `version-on-main.yml` requires a `COMMITIZEN_PAT` secret because `GITHUB_TOKEN` would not trigger the downstream tag/release workflow chain.

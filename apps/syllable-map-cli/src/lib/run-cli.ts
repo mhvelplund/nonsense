@@ -4,7 +4,7 @@ import {
   buildSyllableMap,
   serializeMapCsv,
   serializeMapJson,
-} from "@nonsense/synthetic-language-core";
+} from "@mhvelplund/synthetic-language-core";
 
 import type { CliOptions } from "./parse-cli-args";
 import { resolveInputRequest } from "./read-input";

@@ -66,10 +66,10 @@ importers:
 
   apps/syllable-map-cli:
     dependencies:
-      '@nonsense/syllables-core':
+      '@mhvelplund/syllables-core':
         specifier: workspace:*
         version: link:../../libs/syllables-core
-      '@nonsense/synthetic-language-core':
+      '@mhvelplund/synthetic-language-core':
         specifier: workspace:*
         version: link:../../libs/synthetic-language-core
       commander:
@@ -78,7 +78,7 @@ importers:
 
   apps/syllables-cli:
     dependencies:
-      '@nonsense/syllables-core':
+      '@mhvelplund/syllables-core':
         specifier: workspace:*
         version: link:../../libs/syllables-core
       commander:
@@ -87,7 +87,7 @@ importers:
 
   apps/synthetic-language-cli:
     dependencies:
-      '@nonsense/synthetic-language-core':
+      '@mhvelplund/synthetic-language-core':
         specifier: workspace:*
         version: link:../../libs/synthetic-language-core
       commander:
@@ -102,7 +102,7 @@ importers:
 
   libs/synthetic-language-core:
     dependencies:
-      '@nonsense/syllables-core':
+      '@mhvelplund/syllables-core':
         specifier: workspace:*
         version: link:../syllables-core
       tslib:

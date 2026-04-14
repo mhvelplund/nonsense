@@ -1,4 +1,4 @@
-import type { RankedSyllableEntry } from "@nonsense/syllables-core";
+import type { RankedSyllableEntry } from "@mhvelplund/syllables-core";
 
 // Matches a quoted syllable field followed by a semicolon and an integer count.
 // Format: "syllable";count

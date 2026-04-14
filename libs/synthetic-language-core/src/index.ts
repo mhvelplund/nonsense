@@ -1,6 +1,6 @@
 export * from "./lib/build-syllable-map";
 export type { Rng } from "./lib/generate-synthetic-syllable";
-export type { SupportedLanguage } from "@nonsense/syllables-core";
+export type { SupportedLanguage } from "@mhvelplund/syllables-core";
 export * from "./lib/map-records";
 export * from "./lib/parse-map-csv";
 export * from "./lib/parse-map-json";

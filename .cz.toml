@@ -1,0 +1,13 @@
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "1.1.0"
+tag_format = "v$version"
+update_changelog_on_bump = false
+version_files = [
+  "package.json:version",
+  "apps/syllables-cli/package.json:version",
+  "apps/syllable-map-cli/package.json:version",
+  "apps/synthetic-language-cli/package.json:version",
+  "libs/syllables-core/package.json:version",
+  "libs/synthetic-language-core/package.json:version",
+]

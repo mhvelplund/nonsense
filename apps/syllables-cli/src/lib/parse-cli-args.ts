@@ -1,6 +1,6 @@
 import { Command, InvalidArgumentError, Option } from "commander";
 
-import type { SortSpec, SupportedLanguage } from "@nonsense/syllables-core";
+import type { SortSpec, SupportedLanguage } from "@mhvelplund/syllables-core";
 
 export interface CliOptions {
   inputPath?: string;
