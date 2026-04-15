@@ -56,8 +56,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pnpm --dir libs/syllables-core publish --no-git-checks
-          pnpm --dir libs/synthetic-language-core publish --no-git-checks
-          pnpm --dir apps/syllables-cli/dist publish --no-git-checks
-          pnpm --dir apps/syllable-map-cli/dist publish --no-git-checks
-          pnpm --dir apps/synthetic-language-cli/dist publish --no-git-checks
+          (cd libs/syllables-core && pnpm publish --no-git-checks)
+          (cd libs/synthetic-language-core && pnpm publish --no-git-checks)
+          (cd apps/syllables-cli/dist && pnpm publish --no-git-checks)
+          (cd apps/syllable-map-cli/dist && pnpm publish --no-git-checks)
+          (cd apps/synthetic-language-cli/dist && pnpm publish --no-git-checks)
