@@ -10,16 +10,6 @@ overrides:
 importers:
 
   .:
-    dependencies:
-      hyphenation.da:
-        specifier: ^0.2.1
-        version: 0.2.1
-      hyphenation.en-us:
-        specifier: ^0.2.1
-        version: 0.2.1
-      hypher:
-        specifier: ^0.2.5
-        version: 0.2.5
     devDependencies:
       '@nx/esbuild':
         specifier: 22.6.5
@@ -99,6 +89,15 @@ importers:
 
   libs/syllables-core:
     dependencies:
+      hyphenation.da:
+        specifier: ^0.2.1
+        version: 0.2.1
+      hyphenation.en-us:
+        specifier: ^0.2.1
+        version: 0.2.1
+      hypher:
+        specifier: ^0.2.5
+        version: 0.2.5
       tslib:
         specifier: ^2.3.0
         version: 2.8.1

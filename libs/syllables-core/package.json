@@ -23,6 +23,9 @@
   },
   "repository": "https://github.com/mhvelplund/nonsense.git",
   "dependencies": {
+    "hyphenation.da": "^0.2.1",
+    "hyphenation.en-us": "^0.2.1",
+    "hypher": "^0.2.5",
     "tslib": "^2.3.0"
   }
 }

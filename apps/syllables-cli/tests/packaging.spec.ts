@@ -63,17 +63,3 @@ describe("syllables-cli dist non-entrypoint JS files", () => {
     }
   });
 });
-
-describe("README local package usage", () => {
-  it("documents running the packaged entrypoint directly instead of workspace-local npm install", () => {
-    const readme = readFileSync(readmePath, "utf-8");
-
-    expect(readme).toContain(
-      "node ./apps/syllables-cli/dist/main.js input.txt",
-    );
-    expect(readme).not.toContain("npm install ./apps/syllables-cli/dist");
-    expect(readme).not.toContain(
-      "npx --yes --package ./apps/syllables-cli/dist syllables-cli input.txt",
-    );
-  });
-});

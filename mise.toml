@@ -7,3 +7,5 @@ pre-commit = "latest"
 
 [shell_alias]
 "syllables-cli" = "node ./apps/syllables-cli/dist/main.js"
+"syllable-map-cli" = "node ./apps/syllable-map-cli/dist/main.js"
+"synthetic-language-cli" = "node ./apps/synthetic-language-cli/dist/main.js"

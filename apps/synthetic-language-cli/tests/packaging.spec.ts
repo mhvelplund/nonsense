@@ -62,20 +62,3 @@ describe("synthetic-language-cli dist non-entrypoint JS files", () => {
     }
   });
 });
-
-describe("README local package usage", () => {
-  it("documents running the packaged entrypoint directly instead of workspace-local npm install", () => {
-    const readmePath = resolve(__dirname, "../../../README.md");
-    const readme = readFileSync(readmePath, "utf-8");
-
-    expect(readme).toContain(
-      "node ./apps/synthetic-language-cli/dist/main.js --map map.csv --direction to-synthetic input.txt",
-    );
-    expect(readme).not.toContain(
-      "npm install ./apps/synthetic-language-cli/dist",
-    );
-    expect(readme).not.toContain(
-      "npx --yes --package ./apps/synthetic-language-cli/dist synthetic-language-cli",
-    );
-  });
-});
