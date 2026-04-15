@@ -1,3 +1,9 @@
+## v1.1.6 (2026-04-15)
+
+### Fix
+
+- publish packages from package directories
+
 ## v1.1.5 (2026-04-14)
 
 ### Fix
