@@ -1,3 +1,9 @@
+## v1.1.7 (2026-04-15)
+
+### Fix
+
+- Moved dependencies to syllable-core
+
 ## v1.1.6 (2026-04-15)
 
 ### Fix
