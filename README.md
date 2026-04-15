@@ -30,23 +30,38 @@ Run the packaged CLIs directly using Node:
 
 ```shell
 # Analyze syllable frequencies
-syllables-cli input.txt
+syllables input.txt
 
 # Build a syllable substitution map from ranked syllables
-syllable-map-cli ranked.csv
+syllable-map ranked.csv
 
 # Translate text to or from a synthetic language
-synthetic-language-cli --map map.csv --direction to-synthetic input.txt
+synthetic-language --map map.csv --direction to-synthetic input.txt
 ```
 
 This example shows how to generate a complete synthetic language and translate text.
 
 ```shell
 unzip examples/english.zip -d examples/
-syllables-cli -l 50000 examples/english.txt > examples/ranked.csv
-syllable-map-cli examples/ranked.csv > examples/zorkish.language-map
-synthetic-language-cli --map examples/zorkish.language-map --direction to-synthetic examples/the-verdict.txt > examples/zorked.txt
-synthetic-language-cli --map examples/zorkish.language-map --direction from-synthetic examples/zorked.txt > examples/unzorked.txt
+syllables -l 150000 examples/english.txt > examples/ranked.csv
+syllable-map examples/ranked.csv > examples/zorkish.language-map
+synthetic-language --map examples/zorkish.language-map --direction to-synthetic examples/the-verdict.txt > examples/zorked.txt
+synthetic-language --map examples/zorkish.language-map --direction from-synthetic examples/zorked.txt > examples/unzorked.txt
+```
+
+... or:
+
+```shell
+syllables --limit 150000  < examples/english.txt | syllable-map >examples/zorkish.language-map
+synthetic-language --map examples/zorkish.language-map --direction to-synthetic < examples/the-verdict.txt | \
+  synthetic-language --map examples/zorkish.language-map --direction from-synthetic > examples/unzorked.txt
+```
+
+_Note: why a limit of 150k on syllables? I checked how many there was total with:_
+
+```
+$ syllables --limit 500000  < examples/english.txt  |wc -l
+148673
 ```
 
 As a casual `diff examples/the-verdict.txt examples/unzorked.txt` will show, it's not perfect:
@@ -64,6 +79,15 @@ As a casual `diff examples/the-verdict.txt examples/unzorked.txt` will show, it'
 
 Some random words are mangled, and names are almost always mangled. But as they say, "it's good enough for government
 work".
+
+_Note: since the language maps are random, you're version of Zorkish will have slightly different errors 😅_
+
+### Shell aliases vs. CLI
+
+When you install the three tools (`syllables-cli`, `syllable-map-cli`, and `synthetic-language-cli`) they are placed in
+path with those names. While developing, and in the examples above, you can run directly off the local code by using the
+three shell aliases installed by `mise-en-place`. To do that, simply take the name and strip off "cli", so
+`syllables-cli` becomes `syllables`.
 
 ## CI/CD
 
