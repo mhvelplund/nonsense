@@ -59,11 +59,23 @@
       "executor": "@nx/js:prune-lockfile",
       "outputs": [
         "{workspaceRoot}/apps/syllables-cli/dist/package.json",
-        "{workspaceRoot}/apps/syllables-cli/dist/pnpm-lock.yaml"
+        "{workspaceRoot}/apps/syllables-cli/dist/pnpm-lock.yaml",
+        "{workspaceRoot}/apps/syllables-cli/dist/pnpm-workspace.yaml",
+        "{workspaceRoot}/apps/syllables-cli/dist/patches",
+        "{workspaceRoot}/apps/syllables-cli/dist/local_path_modules"
       ],
       "options": {
         "buildTarget": "build"
-      }
+      },
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/pnpm-workspace.yaml",
+        "{workspaceRoot}/package.json",
+        {
+          "runtime": "node -e \"try{console.log('pnpm major '+require('child_process').execSync('pnpm --version',{stdio:['ignore','pipe','ignore']}).toString().trim().split('.')[0])}catch{console.log('pnpm major unavailable')}\""
+        }
+      ]
     },
     "copy-workspace-modules": {
       "dependsOn": ["build"],
