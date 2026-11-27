@@ -1,3 +1,7 @@
 packages:
   - apps/*
   - libs/*
+
+overrides:
+  # nx 23.3.3 pins a vulnerable undici; remove once nx depends on >=7.30.1
+  'undici@<7.30.1': '^7.30.2'
